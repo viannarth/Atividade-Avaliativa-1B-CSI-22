@@ -35,8 +35,12 @@ class Ingrediente(Item):
 
 
 class Bebida(ABC):
-    def __init__(self, preco:float) -> None:
+    def __init__(self, preco:float, tipo_bebida:TipoBebida) -> None:
         self._preco:float = preco
+        self._tipo_bebida:TipoBebida = tipo_bebida
+
+    def consultarTipoBebida(self) -> TipoBebida:
+        pass
 
     def consultarPreco(self) -> float:
         pass
@@ -46,7 +50,7 @@ class BebidaLata(Item, Bebida):
     def __init__(self, nome:str, quantidade:int = 0) -> None:
         super(Item, self).__init__(nome, quantidade)
         preco_lata:float = 5.0
-        super(Bebida, self).__init__(preco_lata)
+        super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
         
     def atualizarQuantidade(self, unidades_vendidas:int) -> None:
         pass
@@ -62,7 +66,7 @@ class Doses(Enum):
 class BebidaDosada(Bebida):
     def __init__(self) -> None:
         preco_dosada:float = 10.0
-        super(Bebida, self).__init__(preco_dosada)
+        super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
 
     def criarBebidaDosada(self, agua:Ingrediente, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:
         pass
@@ -111,7 +115,6 @@ class MaquinaVendas():
     def consultarValorTotal(self) -> float:
         pass
 
-    # use isinstance()
     def consultarValorBebida(self, tipo_bebida:TipoBebida) -> float:
         pass
 
