@@ -96,6 +96,12 @@ class Carrinho():
     def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
         pass
 
+    def removerBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
+        pass
+
+    def esvaziarCarrinho(self) -> None:
+        pass
+
 
 class MaquinaVendas(): 
     def __init__(self) -> None:
