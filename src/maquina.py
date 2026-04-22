@@ -1,6 +1,6 @@
-from padrao import TipoBebida
-from estoque import Item, Bebida, BebidaDosada, BebidaLata, Ingrediente
-from carrinho import Carrinho
+from src.constantes import TipoBebida
+from src.estoque import Item, Bebida, BebidaDosada, BebidaLata
+from src.carrinho import Carrinho
 
 class MaquinaVendas(): 
     def __init__(self) -> None:
@@ -21,9 +21,7 @@ class MaquinaVendas():
         pass
 
     def consultarValorBebida(self, tipo_bebida:TipoBebida) -> float:
-        if tipo_bebida == BebidaLata.TipoBebida:
-            return BebidaLata.consultarPreco()
-        return BebidaDosada.consultarPreco()
+        pass
 
     def atualizarSaldo(self, bebida:Bebida, quantidade_vendida:int) -> None:
         self.__saldo = self.__saldo + bebida.consultarPreco()*quantidade_vendida

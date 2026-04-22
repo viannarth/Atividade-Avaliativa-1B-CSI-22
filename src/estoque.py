@@ -1,5 +1,6 @@
+from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
 from abc import ABC, abstractmethod
-from padrao import TipoBebida, Doses
+
 
 class Item(ABC):
     def __init__(self, nome:str, quantidade:int) -> None:
@@ -40,7 +41,7 @@ class Bebida(ABC):
 class BebidaLata(Item, Bebida):
     def __init__(self, nome:str, quantidade:int = 0) -> None:
         super(Item, self).__init__(nome, quantidade)
-        preco_lata:float = 5.0
+        preco_lata:float = PRECO_BEBIDA_LATA
         super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
         
     def atualizarQuantidade(self, unidades_vendidas:int) -> None:
@@ -49,7 +50,7 @@ class BebidaLata(Item, Bebida):
 
 class BebidaDosada(Bebida):
     def __init__(self) -> None:
-        preco_dosada:float = 10.0
+        preco_dosada:float = PRECO_BEBIDA_DOSADA
         super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
 
     def criarBebidaDosada(self, agua:Ingrediente, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:

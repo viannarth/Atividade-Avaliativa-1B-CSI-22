@@ -1,5 +1,5 @@
-from main import Bebida
-from padrao import FormaPagamento
+from src.estoque import Bebida
+from src.constantes import FormaPagamento
 
 class Carrinho():
     def __init__(self) -> None:
