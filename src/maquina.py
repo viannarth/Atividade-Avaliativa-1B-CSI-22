@@ -5,11 +5,13 @@ from src.carrinho import Carrinho
 class MaquinaVendas(): 
     def __init__(self) -> None:
         self.__estoque:dict[Item, int] = {}
-        self.__vendas:dict[Bebida, int] = {}
-        self.__saldo:float = 0
+        self.__vendas:dict[TipoBebida, float] = {}
 
     def consultarSaldo(self) -> float:
-        return self.__saldo
+        saldo = 0
+        for tipo in self.__vendas:
+            saldo += self.__vendas[tipo]
+        return saldo
 
     def consultarEstoque(self) -> dict[Item, int]:
         return self.__estoque
@@ -17,17 +19,12 @@ class MaquinaVendas():
     def consultarEstoqueItem(self, item:Item) -> int:
         return self.__estoque[item]
 
-    def consultarValorTotal(self) -> float:
-        pass
-
     def consultarValorBebida(self, tipo_bebida:TipoBebida) -> float:
-        pass
-
-    def atualizarSaldo(self, bebida:Bebida, quantidade_vendida:int) -> None:
-        self.__saldo = self.__saldo + bebida.consultarPreco()*quantidade_vendida
+        return self.__vendas[tipo_bebida]
 
     def atualizarVendas(self, bebida:Bebida, quantidade_vendida:int) -> None:
-        pass
+        self.__vendas[bebida.consultarTipoBebida()] += bebida.consultarPreco()*quantidade_vendida
+        self.__estoque[bebida] -= quantidade_vendida
 
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
         pass

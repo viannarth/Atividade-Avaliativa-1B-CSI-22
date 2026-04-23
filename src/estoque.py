@@ -22,8 +22,8 @@ class Ingrediente(Item):
     def __init__(self, nome:str, quantidade:int = 0) -> None:
         super().__init__(nome, quantidade)
 
-    def atualizarQuantidade(self, massa_usada:int) -> None:
-        self.__quantidade = self.__quantidade - massa_usada
+    def atualizarQuantidade(self, delta_massa:int) -> None:
+        self.__quantidade += delta_massa
 
 
 class Bebida(ABC):
@@ -44,8 +44,8 @@ class BebidaLata(Item, Bebida):
         preco_lata:float = PRECO_BEBIDA_LATA
         super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
         
-    def atualizarQuantidade(self, unidades_vendidas:int) -> None:
-        self.__quantidade = self.__quantidade - unidades_vendidas
+    def atualizarQuantidade(self, delta_unidades:int) -> None:
+        self.__quantidade += delta_unidades
 
 
 class BebidaDosada(Bebida):
