@@ -4,6 +4,7 @@ from src.carrinho import Carrinho
 
 class MaquinaVendas(): 
     def __init__(self) -> None:
+        self._carrinho:Carrinho = Carrinho()
         self._estoque:dict[Item, int] = {}
         self._vendas:dict[TipoBebida, float] = {}
 
@@ -29,5 +30,8 @@ class MaquinaVendas():
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
         pass
 
-    def realizarVenda(self, carrinho:Carrinho, bebida:Bebida, quantidade_vendida:int = 1) -> None:
+    def atualizarBebida(self, bebida:Bebida, quantidade_vendida:int = 1) -> None:
+        pass
+
+    def realizarVenda(self) -> None:
         pass
