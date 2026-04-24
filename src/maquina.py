@@ -10,8 +10,8 @@ class MaquinaVendas():
 
     def consultarSaldo(self) -> float:
         saldo = 0
-        for tipo in self._vendas:
-            saldo += self._vendas[tipo]
+        for tipo_bebida in self._vendas:
+            saldo += self._vendas[tipo_bebida]
         return saldo
 
     def consultarEstoque(self) -> dict[Item, int]:

@@ -1,7 +1,6 @@
 from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
 from abc import ABC, abstractmethod
 
-
 class Item(ABC):
     def __init__(self, nome:str, quantidade:int) -> None:
         self._nome:str = nome
