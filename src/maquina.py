@@ -1,5 +1,5 @@
 from src.constantes import TipoBebida
-from src.estoque import Item, Bebida
+from src.item import Item, Bebida
 from src.carrinho import Carrinho
 
 class MaquinaVendas(): 
