@@ -1,14 +1,14 @@
 from src.maquina import MaquinaVendas
 from src.interface import Interface
+from src.constantes import SENHA_ACESSO_RESTRITO
 from enum import Enum
-
-SENHA_ACESSO_RESTRITO = "1000000390"
 
 class Estado(Enum):
     TELA_INICIAL = 0
-    ACESSO_RESTRITO = 1
-    ESCOLHA_BEBIDA = 2
-    FINALIZAR_COMPRA = 3
+    ACESSO_RESTRITO_NAO_AUTORIZADO = 1
+    ACESSO_RESTRITO_AUTORIZADO = 2
+    ESCOLHA_BEBIDA = 3
+    FINALIZAR_COMPRA = 4
 
 class GerenciadorMaquina():
     def __init__(self, maquina:MaquinaVendas) -> None:
@@ -22,7 +22,9 @@ class GerenciadorMaquina():
     def executarEstado(self) -> None:
         if self._estado == Estado.TELA_INICIAL:
             self.telaInicial()
-        elif self._estado == Estado.ACESSO_RESTRITO:
+        elif self._estado == Estado.ACESSO_RESTRITO_NAO_AUTORIZADO:
+            self.validarAcessoRestrito()
+        elif self._estado == Estado.ACESSO_RESTRITO_AUTORIZADO:
             self.acessoRestrito()
         elif self._estado == Estado.ESCOLHA_BEBIDA:
             self.escolhaBebida()
@@ -32,24 +34,43 @@ class GerenciadorMaquina():
     def telaInicial(self) -> None:
         input_:int | ValueError = self._interface.opcoesTelaInicial()
         if input_ == ValueError:
-            print("Digite uma opção válida.")
+            self._interface.opcaoInvalida()
             return
 
         if input_ == 1:
             self.alterarEstado(Estado.ESCOLHA_BEBIDA)
         elif input_ == 2:
-            self.alterarEstado(Estado.ACESSO_RESTRITO)
+            self.alterarEstado(Estado.ACESSO_RESTRITO_NAO_AUTORIZADO)
         elif input_ == 3:
             exit()
 
     def escolhaBebida(self) -> None:
         pass
 
+    def validarAcessoRestrito(self) -> None:
+        senha = self._interface.verificarSenha()
+        if senha == "":
+            self.alterarEstado(Estado.TELA_INICIAL)
+        elif senha == SENHA_ACESSO_RESTRITO:
+            self.alterarEstado(Estado.ACESSO_RESTRITO_AUTORIZADO)
+        else:
+            self._interface.senhaInvalida()
+
     def acessoRestrito(self) -> None:
-        pass
+        input_:int | ValueError = self._interface.opcoesAcessoRestrito()
+        if input_ == ValueError:
+            self._interface.opcaoInvalida()
+            return
+
+        if input_ == 1:
+            print("Saldo checado :)")
+        elif input_ == 2:
+            print("Item estocado :)")
+        elif input_ == 3:
+            self.alterarEstado(Estado.TELA_INICIAL)
 
     def finalizarCompra(self) -> None:
         input_:int | ValueError = self._interface.opcoesFinalizarCompra()
         if input_ == ValueError:
-            print("Digite uma opção válida.")
+            self._interface.opcaoInvalida()
             return

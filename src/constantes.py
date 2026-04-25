@@ -19,3 +19,4 @@ class FormaPagamento(Enum):
 
 PRECO_BEBIDA_LATA:float = 5.0
 PRECO_BEBIDA_DOSADA:float = 10.0
+SENHA_ACESSO_RESTRITO:str = "1000000390"
