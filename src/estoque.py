@@ -1,45 +1,21 @@
-from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
-from abc import ABC
-
-#TODO: remove attribute _quantidade and relationated methods from all classes 
-# that have it
-#TODO: separate Item from stock and create a new class Estoque to store the 
-# quantitites of the itens
-
-class Item(ABC):
-    def __init__(self, nome:str) -> None:
-        self._nome:str = nome
-
-    def consultarNome(self) -> str:
-        return self._nome
-
-class Ingrediente(Item):
-    def __init__(self, nome:str) -> None:
-        super().__init__(nome)
+from src.item import Item
 
 
-class Bebida(ABC):
-    def __init__(self, preco:int, tipo_bebida:TipoBebida) -> None:
-        self._preco:int = preco
-        self._tipo_bebida:TipoBebida = tipo_bebida
+class Estoque():
+    def __init__(self) -> None:
+        self._estoque:dict[Item, int] = {}
 
-    def consultarTipoBebida(self) -> TipoBebida:
-        return self._tipo_bebida
+    def consultarEstoque(self) -> dict[Item, int]:
+        return self._estoque
+    
+    def consultarEstoqueItem(self, item:Item) -> int:
+        if item not in self._estoque: return 0
+        return self._estoque[item]
+    
+    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
+        if item not in self._estoque: self._estoque[item] = quantidade_estoque
+        else :self._estoque[item] += quantidade_estoque
 
-    def consultarPreco(self) -> int:
-        return self._preco
-
-
-class BebidaLata(Item, Bebida):
-    def __init__(self, nome:str, quantidade:int = 0) -> None:
-        super(Item, self).__init__(nome)
-        preco_lata:int = PRECO_BEBIDA_LATA
-        super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
-
-
-#TODO: change implementation of BebidaDosada
-class BebidaDosada(Bebida):
-    def __init__(self, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:
-        preco_dosada:int = PRECO_BEBIDA_DOSADA
-        super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-        self._bebida_dosada = (ingredientes, doses)
+    def atualizarEstoqueItem(self, item:Item, quantidade_vendida:int) -> None:
+        self._estoque[item] -= quantidade_vendida
+        if self._estoque[item] == 0: del self._estoque[item]
