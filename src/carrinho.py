@@ -10,7 +10,7 @@ class Carrinho():
     def consultarBebidas(self) -> list[Bebida]:
         return self._carrinho
     
-    def consultarValorTotal(self) -> float:
+    def consultarValorTotal(self) -> int:
         return self._valor_total
     
     def checarVazio(self) -> bool:

@@ -8,15 +8,15 @@ class MaquinaVendas():
     def __init__(self) -> None:
         self._carrinho:Carrinho = Carrinho()
         self._estoque:dict[Item, int] = {}
-        self._vendas:dict[TipoBebida, float] = {}
+        self._vendas:dict[TipoBebida, int] = {}
 
-    def consultarSaldo(self) -> float:
+    def consultarSaldo(self) -> int:
         saldo = 0
         for tipo_bebida in self._vendas:
             saldo += self._vendas[tipo_bebida]
         return saldo
     
-    def consultarSaldoBebida(self, tipo_bebida:TipoBebida) -> float:
+    def consultarSaldoBebida(self, tipo_bebida:TipoBebida) -> int:
         return self._vendas[tipo_bebida]
 
     def consultarEstoque(self) -> dict[Item, int]:
