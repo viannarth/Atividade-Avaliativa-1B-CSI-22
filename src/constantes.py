@@ -10,6 +10,7 @@ class Doses(Enum):
     CINQUENTA: 5
     SETENTA: 7
     CEM: 10
+    AGUA: 50
 
 
 class FormaPagamento(Enum):
