@@ -1,6 +1,11 @@
 from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
 from abc import ABC, abstractmethod
 
+#TODO: remove attribute _quantidade and relationated methods from all classes 
+# that have it
+#TODO: separate Item from stock and create a new class Estoque to store the 
+# quantitites of the itens
+
 class Item(ABC):
     def __init__(self, nome:str, quantidade:int) -> None:
         self._nome:str = nome
@@ -46,7 +51,7 @@ class BebidaLata(Item, Bebida):
     def atualizarQuantidade(self, delta_unidades:int) -> None:
         self._quantidade += delta_unidades
 
-
+#TODO: change implementation of BebidaDosada
 class BebidaDosada(Bebida):
     def __init__(self) -> None:
         preco_dosada:float = PRECO_BEBIDA_DOSADA

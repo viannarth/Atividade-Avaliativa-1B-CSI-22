@@ -13,6 +13,9 @@ class MaquinaVendas():
         for tipo_bebida in self._vendas:
             saldo += self._vendas[tipo_bebida]
         return saldo
+    
+    def consultarSaldoBebida(self, tipo_bebida:TipoBebida) -> float:
+        return self._vendas[tipo_bebida]
 
     def consultarEstoque(self) -> dict[Item, int]:
         return self._estoque
@@ -20,18 +23,15 @@ class MaquinaVendas():
     def consultarEstoqueItem(self, item:Item) -> int:
         return self._estoque[item]
 
-    def consultarValorBebida(self, tipo_bebida:TipoBebida) -> float:
-        return self._vendas[tipo_bebida]
+    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
+        pass
+
+    def atualizarEstoqueItem(self, item:Item, quantidade_vendida:int = 1) -> None:
+        pass
 
     def atualizarVendas(self, bebida:Bebida, quantidade_vendida:int) -> None:
         self._vendas[bebida.consultarTipoBebida()] += bebida.consultarPreco()*quantidade_vendida
         self._estoque[bebida] -= quantidade_vendida
-
-    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
-        pass
-
-    def atualizarBebida(self, bebida:Bebida, quantidade_vendida:int = 1) -> None:
-        pass
 
     def realizarVenda(self) -> None:
         pass
