@@ -4,7 +4,7 @@ from src.constantes import FormaPagamento
 class Carrinho():
     def __init__(self) -> None:
         self._carrinho:list[Bebida] = []
-        self._valor_total:float = 0.0
+        self._valor_total:int = 0
         self._forma_pagamento:FormaPagamento = None
 
     def consultarBebidas(self) -> list[Bebida]:

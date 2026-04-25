@@ -1,3 +1,5 @@
+from inspect import isclass
+
 from src.constantes import TipoBebida
 from src.estoque import Item, Bebida
 from src.carrinho import Carrinho
@@ -31,7 +33,8 @@ class MaquinaVendas():
 
     def atualizarVendas(self, bebida:Bebida, quantidade_vendida:int) -> None:
         self._vendas[bebida.consultarTipoBebida()] += bebida.consultarPreco()*quantidade_vendida
-        self._estoque[bebida] -= quantidade_vendida
+        if (bebida.consultarTipoBebida() == TipoBebida.LATA):
+
 
     def realizarVenda(self) -> None:
         pass

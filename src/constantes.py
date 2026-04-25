@@ -17,5 +17,5 @@ class FormaPagamento(Enum):
     DEBITO = 2
     CREDITO = 3
 
-PRECO_BEBIDA_LATA:float = 5.0
-PRECO_BEBIDA_DOSADA:float = 10.0
+PRECO_BEBIDA_LATA:int = 5
+PRECO_BEBIDA_DOSADA:int = 10

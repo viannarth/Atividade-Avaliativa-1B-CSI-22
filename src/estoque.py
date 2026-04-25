@@ -18,7 +18,7 @@ class Item(ABC):
         return self._quantidade
 
     @abstractmethod
-    def atualizarQuantidade(self) -> None: 
+    def atualizarQuantidade(self, delta_quantidade:int) -> None:
         pass
 
 
@@ -31,21 +31,21 @@ class Ingrediente(Item):
 
 
 class Bebida(ABC):
-    def __init__(self, preco:float, tipo_bebida:TipoBebida) -> None:
-        self._preco:float = preco
+    def __init__(self, preco:int, tipo_bebida:TipoBebida) -> None:
+        self._preco:int = preco
         self._tipo_bebida:TipoBebida = tipo_bebida
 
     def consultarTipoBebida(self) -> TipoBebida:
         return self._tipo_bebida
 
-    def consultarPreco(self) -> float:
+    def consultarPreco(self) -> int:
         return self._preco
 
 
 class BebidaLata(Item, Bebida):
     def __init__(self, nome:str, quantidade:int = 0) -> None:
         super(Item, self).__init__(nome, quantidade)
-        preco_lata:float = PRECO_BEBIDA_LATA
+        preco_lata:int = PRECO_BEBIDA_LATA
         super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
         
     def atualizarQuantidade(self, delta_unidades:int) -> None:
@@ -53,9 +53,7 @@ class BebidaLata(Item, Bebida):
 
 #TODO: change implementation of BebidaDosada
 class BebidaDosada(Bebida):
-    def __init__(self) -> None:
+    def __init__(self, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:
         preco_dosada:float = PRECO_BEBIDA_DOSADA
         super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-
-    def criarBebidaDosada(self, agua:Ingrediente, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:
-        pass
+        self._bebida_dosada = (ingredientes, doses)
