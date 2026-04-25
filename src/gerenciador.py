@@ -1,7 +1,9 @@
 from src.maquina import MaquinaVendas
 from src.interface import Interface
-from src.constantes import SENHA_ACESSO_RESTRITO
+from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida
+from src.item import Bebida
 from enum import Enum
+from time import sleep
 
 class Estado(Enum):
     TELA_INICIAL = 0
@@ -74,3 +76,24 @@ class GerenciadorMaquina():
         if input_ == ValueError:
             self._interface.opcaoInvalida()
             return
+        
+        if input_ == 4:
+            self.alterarEstado(Estado.TELA_INICIAL)
+            return
+        
+        forma_pagamento = FormaPagamento(input_)
+        valor_total = MaquinaVendas.consultarValorTotal()
+        self._interface.exibirValorTotal(valor_total)
+        carrinho = self._maquina.consultarCarrinho().copy()
+
+        MaquinaVendas.realizarVenda(forma_pagamento)
+        self._interface.finalizarCompra(forma_pagamento)
+
+        for bebida in carrinho:
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+                self._interface.dispensarBebidaLata(carrinho[bebida], bebida.consultarNome())
+
+            else:
+                lista_doses:list[int] = [bebida[ingrediente].value for ingrediente in bebida.consultarIngredientes()]
+                lista_ingredientes:list[str] = [ingrediente.consultarNome() for ingrediente in bebida.consultarIngredientes()]
+                self._interface.dispensarIngrediente(lista_doses, lista_ingredientes)
