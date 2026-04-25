@@ -6,10 +6,10 @@ class TipoBebida(Enum):
 
 
 class Doses(Enum):
-    TRINTA: 0.30
-    CINQUENTA: 0.50
-    SETENTA: 0.70
-    CEM: 1.00
+    TRINTA: 3
+    CINQUENTA: 5
+    SETENTA: 7
+    CEM: 10
 
 
 class FormaPagamento(Enum):
