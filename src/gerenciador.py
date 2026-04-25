@@ -49,5 +49,7 @@ class GerenciadorMaquina():
         pass
 
     def finalizarCompra(self) -> None:
-        pass
-    
+        input_:int | ValueError = self._interface.opcoesFinalizarCompra()
+        if input_ == ValueError:
+            print("Digite uma opção válida.")
+            return
