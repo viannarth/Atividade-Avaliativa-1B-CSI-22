@@ -1,6 +1,6 @@
 from src.constantes import TipoBebida, FormaPagamento
 from src.estoque import Estoque
-from src.item import Item, Bebida, BebidaDosada, BebidaLata
+from src.item import Item, Bebida
 from src.carrinho import Carrinho
 
 class MaquinaVendas(): 
@@ -50,8 +50,10 @@ class MaquinaVendas():
         if (bebida.consultarTipoBebida() == TipoBebida.LATA):
             self._estoque.atualizarEstoqueItem(bebida, quantidade_vendida)
         else:
-            for ingrediente in bebida._bebida_dosada:
-                self._estoque.atualizarEstoqueItem(ingrediente, quantidade_vendida*bebida._bebida_dosada[ingrediente])
+            ingredientes = bebida.consultarIngrediente()
+            for ingrediente in ingredientes:
+                self._estoque.atualizarEstoqueItem(ingrediente, quantidade_vendida*ingredientes[ingrediente])
+
 
     def realizarVenda(self, forma_pagamento:FormaPagamento) -> None:
         self._carrinho.definirFormaPagamento(forma_pagamento)

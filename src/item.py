@@ -42,3 +42,6 @@ class BebidaDosada(Bebida):
     def adicionarIngrediente(self, ingrediente:Ingrediente, dose:Doses) -> None:
         self._bebida_dosada[ingrediente] = dose
 
+    def consultarIngrediente(self) -> dict[Ingrediente,Doses]:
+        return self._bebida_dosada
+
