@@ -18,7 +18,7 @@ class MaquinaVendas():
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
         self._estoque(item, quantidade_estoque)
 
-    def consultarCarrinho(self) -> list[Bebida]:
+    def consultarCarrinho(self) -> dict[Bebida, int]:
         self._carrinho.consultarBebidas()
 
     def consultarValorTotal(self) -> int:
