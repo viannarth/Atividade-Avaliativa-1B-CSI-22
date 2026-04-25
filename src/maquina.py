@@ -1,4 +1,4 @@
-from src.constantes import TipoBebida
+from src.constantes import TipoBebida, FormaPagamento
 from src.estoque import Estoque
 from src.item import Item, Bebida
 from src.carrinho import Carrinho
@@ -9,6 +9,33 @@ class MaquinaVendas():
         self._estoque:Estoque = Estoque()
         self._vendas:dict[TipoBebida, int] = {}
 
+    def consultarEstoque(self) -> dict[Item, int]:
+        return self._estoque.consultarEstoque()
+
+    def consultarEstoqueItem(self) -> int:
+        return self._estoque.consultarEstoqueItem()
+    
+    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
+        self._estoque(item, quantidade_estoque)
+
+    def consultarCarrinho(self) -> list[Bebida]:
+        self._carrinho.consultarBebidas()
+
+    def consultarValorTotal(self) -> int:
+        self._carrinho.consultarValorTotal()
+
+    def checarVazio(self) -> bool:
+        self._carrinho.checarVazio()
+
+    def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
+        self._carrinho.adicionarBebida(bebida, num_bebidas)
+
+    def removerBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
+        self._carrinho.removerBebida(bebida, num_bebidas)
+
+    def esvaziarCarrinho(self) -> None:
+        self._carrinho.esvaziarCarrinho()
+    
     def consultarSaldo(self) -> int:
         saldo = 0
         for tipo_bebida in self._vendas:
@@ -22,5 +49,5 @@ class MaquinaVendas():
         self._vendas[bebida.consultarTipoBebida()] += bebida.consultarPreco()*quantidade_vendida
         if (bebida.consultarTipoBebida() == TipoBebida.LATA):
 
-    def realizarVenda(self) -> None:
+    def realizarVenda(self, forma_pagamento:FormaPagamento) -> None:
         pass

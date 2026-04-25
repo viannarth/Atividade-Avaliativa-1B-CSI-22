@@ -13,9 +13,9 @@ class Estoque():
         return self._estoque[item]
     
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
-        if item not in self._estoque: self._estoque[item] = quantidade_estoque
+        if self.consultarEstoque(item) == 0: self._estoque[item] = quantidade_estoque
         else :self._estoque[item] += quantidade_estoque
 
     def atualizarEstoqueItem(self, item:Item, quantidade_vendida:int) -> None:
         self._estoque[item] -= quantidade_vendida
-        if self._estoque[item] == 0: del self._estoque[item]
+        if self.consultarEstoque(item) == 0: self._estoque.pop(item)
