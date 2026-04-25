@@ -13,11 +13,14 @@ class Carrinho():
     def consultarValorTotal(self) -> int:
         return self._valor_total
     
+    def consultarFormaPagamento(self) -> FormaPagamento:
+        return self._forma_pagamento
+    
     def checarVazio(self) -> bool:
         if len(self._carrinho) == 0:
             return True
         return False
-
+    
     def definirFormaPagamento(self, forma_pagamento:FormaPagamento) -> None:
         self._forma_pagamento = forma_pagamento
 
