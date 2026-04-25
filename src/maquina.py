@@ -7,7 +7,7 @@ class MaquinaVendas():
     def __init__(self) -> None:
         self._carrinho:Carrinho = Carrinho()
         self._estoque:Estoque = Estoque()
-        self._vendas:dict[TipoBebida, int] = {}
+        self._vendas:dict[TipoBebida, int] = {tipo_bebida: 0 for tipo_bebida in TipoBebida}
 
     def consultarEstoque(self) -> dict[Item, int]:
         return self._estoque.consultarEstoque()
@@ -21,7 +21,7 @@ class MaquinaVendas():
     def consultarFormaPagamento(self) -> FormaPagamento:
         return self._carrinho.consultarFormaPagamento()
     
-    def consultarValorTotal(self) -> int:
+    def consultarValorCarrinho(self) -> int:
         self._carrinho.consultarValorTotal()
 
     def consultarSaldo(self) -> int:
