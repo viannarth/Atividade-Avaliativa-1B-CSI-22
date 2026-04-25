@@ -3,7 +3,6 @@ from src.interface import Interface
 from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida
 from src.item import Bebida
 from enum import Enum
-from time import sleep
 
 class Estado(Enum):
     TELA_INICIAL = 0
