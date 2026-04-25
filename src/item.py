@@ -37,9 +37,10 @@ class BebidaDosada(Bebida):
     def __init__(self) -> None:
         preco_dosada:int = PRECO_BEBIDA_DOSADA
         super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-        self._bebida_dosada: dict[Ingrediente, Doses] = {}
+        agua:Ingrediente = Ingrediente("Agua")
+        self._bebida_dosada: dict[Ingrediente, Doses] = {agua: Doses.AGUA}
 
-    def consultarIngrediente(self) -> dict[Ingrediente,Doses]:
+    def consultarIngredientes(self) -> dict[Ingrediente,Doses]:
         return self._bebida_dosada
     
     def adicionarIngrediente(self, ingrediente:Ingrediente, dose:Doses) -> None:
