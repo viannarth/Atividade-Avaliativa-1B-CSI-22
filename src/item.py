@@ -27,14 +27,18 @@ class Bebida(ABC):
 
 
 class BebidaLata(Item, Bebida):
-    def __init__(self, nome:str, quantidade:int = 0) -> None:
+    def __init__(self, nome:str) -> None:
         super(Item, self).__init__(nome)
         preco_lata:int = PRECO_BEBIDA_LATA
         super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
 
 
 class BebidaDosada(Bebida):
-    def __init__(self, ingredientes:list[Ingrediente], doses:list[Doses]) -> None:
+    def __init__(self) -> None:
         preco_dosada:int = PRECO_BEBIDA_DOSADA
         super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-        self._bebida_dosada = (ingredientes, doses)
+        self._bebida_dosada: dict[Ingrediente, Doses] = {}
+
+    def adicionarIngrediente(self, ingrediente:Ingrediente, dose:Doses) -> None:
+        self._bebida_dosada[ingrediente] = dose
+
