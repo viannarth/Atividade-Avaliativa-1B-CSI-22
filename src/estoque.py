@@ -10,8 +10,13 @@ class Estoque():
         return itens
     
     def consultarEstoqueItem(self, item:Item) -> int:
-        if item not in self._estoque: return 0
         return self._estoque[item]
+    
+    def verificarItem(self, nome:str) -> Item | False:
+        for item in self._estoque:
+            if item.consultarNome() == nome:
+                return item
+        return False
     
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
         if self.consultarEstoqueItem(item) == 0: self._estoque[item] = quantidade_estoque
