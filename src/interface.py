@@ -79,7 +79,34 @@ class Interface():
         opcoes_validas:list[int] = [1, 2, 3, 4]
         return self.validarInput(input_, opcoes_validas)
     
-    def receberItem(self) -> tuple[int, str, int] | ValueError:
+    def opcoesEscolhaBebida(self, carrinho_vazio:bool) -> int | ValueError:
+        if carrinho_vazio:
+            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
+            "dosada\n3 - Retornar à tela inicia\n")
+            opcoes_validas:list[int] = [1, 2, 3]
+            return self.validarInput(input_, opcoes_validas)
+        else:
+            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
+            "dosada\n3 - Finalizar compra\n4 - Cancelar compra\n")
+            opcoes_validas:list[int] = [1, 2, 3, 4]
+            return self.validarInput(input_, opcoes_validas)
+    
+    def verificarBebidaLata(self) -> tuple[str, int] | ValueError:
+        input_ = input("\nDigite o nome da bebida lata:\n")
+        input_.strip()
+        if input_ == "":
+            return ValueError
+        nome_bebida = input_
+        input_ = input("\nDigite a quantidade de bebida desejada:\n")
+        try:
+            quantidade = int(input_)
+        except:
+            return ValueError
+        if quantidade < 0: 
+            return ValueError
+        return (nome_bebida, quantidade)
+    
+    def receberItem(self) -> tuple[str, int] | ValueError:
         input_ = input("\nDigite o tipo de item a ser estocado:\n1 - Ingrediente\n"
         "2 - Bebida em Lata\n")
         opcoes_validas = [1, 2]
