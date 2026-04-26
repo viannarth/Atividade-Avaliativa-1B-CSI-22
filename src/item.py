@@ -1,18 +1,22 @@
-from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
+from src.constantes import TipoItem, TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
 from abc import ABC
 
-
 class Item(ABC):
-    def __init__(self, nome:str) -> None:
+    def __init__(self, nome:str, tipo_item:TipoItem) -> None:
         self._nome:str = nome
+        self._tipo_item:TipoItem = tipo_item
 
     def consultarNome(self) -> str:
         return self._nome
+    
+    def consultarTipoItem(self) -> TipoItem:
+        return self._tipo_item
+
 
 
 class Ingrediente(Item):
     def __init__(self, nome:str) -> None:
-        super().__init__(nome)
+        super().__init__(nome, TipoItem.INGREDIENTE)
 
 
 class Bebida(ABC):
@@ -30,7 +34,7 @@ class Bebida(ABC):
 class BebidaLata(Item, Bebida):
     def __init__(self, nome:str) -> None:
         preco_lata:int = PRECO_BEBIDA_LATA
-        Item.__init__(self, nome)
+        Item.__init__(self, nome, TipoItem.LATA)
         Bebida.__init__(self, preco_lata, TipoBebida.LATA)
 
 
