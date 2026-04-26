@@ -68,7 +68,7 @@ class MaquinaVendas:
         bebidas = self._carrinho.consultarBebidas()
         for bebida in bebidas:
             self._atualizarVendas(bebida, bebidas[bebida])
-            if bebida.consultarTipoBebida() == TipoBebida.LAta
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
                 self._carrinho.removerBebida(bebida.consultarNome(), bebidas[bebida])
             else:
                 self._carrinho.removerBebida(bebida)
