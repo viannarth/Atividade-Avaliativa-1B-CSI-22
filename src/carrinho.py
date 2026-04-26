@@ -1,4 +1,4 @@
-from src.item import Bebida
+from src.item import Bebida, BebidaDosada, BebidaLata
 from src.constantes import FormaPagamento
 
 class Carrinho:
@@ -7,8 +7,9 @@ class Carrinho:
         self._valor_total:int = 0
         self._forma_pagamento:FormaPagamento = None
 
-    def consultarBebidas(self) -> dict[Bebida]:
-        return self._carrinho
+    def consultarBebidas(self) -> list[Bebida]:
+        bebidas:list[Bebida] = [bebida for bebida in self._carrinho]
+        return bebidas
     
     def consultarValorTotal(self) -> int:
         return self._valor_total
@@ -21,21 +22,38 @@ class Carrinho:
             return True
         return False
     
+    def verificarBebidaLata(self, nome_bebida:str) -> BebidaLata | False:
+        for bebida in self._carrinho:
+            if bebida.consultarTipoBebida == BebidaLata:
+                if nome_bebida == bebida.consultarNome():
+                    return bebida
+        return False
+    
     def definirFormaPagamento(self, forma_pagamento:FormaPagamento) -> None:
         self._forma_pagamento = forma_pagamento
 
-    def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
-        if bebida in self._carrinho:
-            self._carrinho[bebida] += num_bebidas
+    def adicionarBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
+        if nome_bebida == None:
+            self._carrinho[bebida_dosada] = num_bebidas
+            self._valor_total += bebida_dosada.consultarPreco()*num_bebidas
         else:
-            self._carrinho[bebida] = num_bebidas
-        self._valor_total += bebida.consultarPreco()*num_bebidas
+            bebida = self.verificarBebidaLata(nome_bebida)
+            if not bebida:
+                self._carrinho[bebida] = num_bebidas
+            else:
+                self._carrinho[bebida] += num_bebidas
+            self._valor_total += bebida.consultarPreco()*num_bebidas
 
-    def removerBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
-        self._carrinho[bebida] -= num_bebidas
-        if self._carrinho[bebida] == 0:
-            self._carrinho.pop(bebida)
-        self._valor_total -= bebida.consultarPreco()*num_bebidas
+    def removerBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
+        if nome_bebida == None:
+            self._carrinho.pop(bebida_dosada)
+            self._valor_total -= bebida_dosada.consultarPreco()*num_bebidas
+        else:
+            bebida = self.verificarBebidaLata(nome_bebida)
+            self._carrinho[bebida] -= num_bebidas
+            if self._carrinho[bebida] == 0:
+                self._carrinho.pop(bebida)
+            self._valor_total -= bebida.consultarPreco()*num_bebidas
 
     def esvaziarCarrinho(self) -> None:
         self._forma_pagamento = None
