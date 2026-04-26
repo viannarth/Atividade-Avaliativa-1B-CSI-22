@@ -11,6 +11,9 @@ class Carrinho:
         bebidas:list[Bebida] = [bebida for bebida in self._carrinho]
         return bebidas
     
+    def consultarItem(self, bebida:Bebida) -> int:
+        return self._carrinho[bebida]
+    
     def consultarValorTotal(self) -> int:
         return self._valor_total
     
@@ -39,6 +42,7 @@ class Carrinho:
         else:
             bebida = self.verificarBebidaLata(nome_bebida)
             if not bebida:
+                bebida = BebidaLata(nome_bebida)
                 self._carrinho[bebida] = num_bebidas
             else:
                 self._carrinho[bebida] += num_bebidas

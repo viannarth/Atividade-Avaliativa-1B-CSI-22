@@ -52,13 +52,17 @@ class GerenciadorMaquina():
             exit()
 
     def escolhaBebida(self) -> None:
+        self.exibirEstoque()
+
         carrinho_vazio = False
         if self._maquina.consultarValorCarrinho() == 0:
             carrinho_vazio = True
         input_:int | ValueError = self._interface.opcoesEscolhaBebida(carrinho_vazio)
+        
         if input_ == ValueError:
             self._interface.opcaoInvalida()
             return
+        
         if carrinho_vazio:
             if input_ == 1:
                 self.alterarEstado(Estado.ADICIONAR_BEBIDA_LATA)
@@ -78,14 +82,26 @@ class GerenciadorMaquina():
                 self.alterarEstado(Estado.TELA_INICIAL)
 
     def adicionarBebidaLata(self) -> None:
-        input_ = self._interface.verificarBebidaLata()
-        bebida_lata = self._maquina.verificarBebidaLata(input_[0])
-        quantidade_estoque = self._maquina.consultarEstoqueItem(input_[0])
-        if input_ == ValueError or not bebida_lata or quantidade_estoque < input_[1]:
+        bebida_lata = self._interface.verificarNomeBebidaLata()
+        if bebida_lata == "":
+            self.alterarEstado(Estado.ESCOLHA_BEBIDA)
+            return
+        if not self._maquina.verificarBebidaLata(bebida_lata):
             self._interface.opcaoInvalida()
             return
-        self._maquina.adicionarBebida(input_[0], input_[1])
+        quantidade = self._interface.verificarQuantidadeBebidaLata()
+        if quantidade == ValueError:
+            self._interface.opcaoInvalida()
+            return
+        quantidade_estoque = self._maquina.consultarEstoqueItem(bebida_lata, TipoItem.LATA)
+        if quantidade_estoque < quantidade:
+            self._interface.opcaoInvalida()
+            return
+        self._maquina.adicionarBebida(nome_bebida=bebida_lata, num_bebidas=quantidade)
         self.alterarEstado(Estado.ESCOLHA_BEBIDA)
+
+    def montarBebidaDosada(self) -> None:
+        pass
         
     def validarAcessoRestrito(self) -> None:
         senha = self._interface.verificarSenha()
@@ -100,7 +116,7 @@ class GerenciadorMaquina():
         itens = self._maquina.consultarEstoqueLista()
         tipo_itens = [item.consultarTipoItem() for item in itens]
         nome_itens = [item.consultarNome() for item in itens]
-        quantidades = [self._maquina.consultarEstoqueItem(nome_item) for nome_item in nome_itens]
+        quantidades = [self._maquina.consultarEstoqueItem(item.consultarNome(), item.consultarTipoItem()) for item in itens]
         self._interface.exibirEstoque(tipo_itens, nome_itens, quantidades)
 
     def acessoRestrito(self) -> None:
@@ -116,6 +132,7 @@ class GerenciadorMaquina():
             self._interface.exibirSaldoMaquina(saldo_total, saldo_dosada, saldo_lata)
         elif input_ == 2:
             self.exibirEstoque()
+            self._interface.estadoEspera()
         elif input_ == 3:
             tupla = self._interface.receberItem()
             if tupla == ValueError:
@@ -142,12 +159,12 @@ class GerenciadorMaquina():
         
         forma_pagamento = FormaPagamento(input_)
 
-        valor_total = MaquinaVendas.consultarValorTotal()
+        valor_total = self._maquina.consultarValorCarrinho()
         self._interface.exibirValorTotal(valor_total)
         
         carrinho = self._maquina.consultarCarrinho().copy()
 
-        MaquinaVendas.realizarVenda(forma_pagamento)
+        self._maquina.realizarVenda(forma_pagamento)
         self._interface.finalizarCompra(forma_pagamento)
 
         for bebida in carrinho:
