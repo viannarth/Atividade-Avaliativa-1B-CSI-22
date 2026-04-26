@@ -36,6 +36,9 @@ class MaquinaVendas():
     def checarVazio(self) -> bool:
         self._carrinho.checarVazio()
 
+    def verificarItem(self, nome:str) -> Item | False:
+        return self._estoque.verificarItem(nome)
+    
     def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
         self._estoque.estocarItem(item, quantidade_estoque)
 
