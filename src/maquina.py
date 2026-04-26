@@ -1,4 +1,4 @@
-from src.constantes import TipoBebida, FormaPagamento
+from src.constantes import TipoBebida, FormaPagamento, TipoItem
 from src.estoque import Estoque
 from src.item import Item, Bebida, BebidaDosada
 from src.carrinho import Carrinho
@@ -39,8 +39,8 @@ class MaquinaVendas():
     def verificarItem(self, nome_item:str) -> Item | False:
         return self._estoque.verificarItem(nome_item)
     
-    def estocarItem(self, nome_item:str, quantidade_estoque:int) -> None:
-        self._estoque.estocarItem(nome_item, quantidade_estoque)
+    def estocarItem(self, tipo_item:TipoItem, nome_item:str, quantidade_estoque:int) -> None:
+        self._estoque.estocarItem(tipo_item, nome_item, quantidade_estoque)
 
     def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
         self._carrinho.adicionarBebida(bebida, num_bebidas)
