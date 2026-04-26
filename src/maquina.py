@@ -13,7 +13,7 @@ class MaquinaVendas():
         return self._estoque.consultarEstoqueLista()
 
     def consultarEstoqueItem(self, nome_item:str) -> int:
-        return self._estoque.consultarEstoqueItem(nome)
+        return self._estoque.consultarEstoqueItem(nome_item)
     
     def consultarCarrinho(self) -> dict[Bebida, int]:
         self._carrinho.consultarBebidas()
