@@ -9,7 +9,9 @@ class Estado(Enum):
     ACESSO_RESTRITO_NAO_AUTORIZADO = 1
     ACESSO_RESTRITO_AUTORIZADO = 2
     ESCOLHA_BEBIDA = 3
-    FINALIZAR_COMPRA = 4
+    ADICIONAR_BEBIDA_LATA = 4
+    MONTAR_BEBIDA_DOSADA = 5
+    FINALIZAR_COMPRA = 6
 
 class GerenciadorMaquina():
     def __init__(self, maquina:MaquinaVendas) -> None:
@@ -29,6 +31,10 @@ class GerenciadorMaquina():
             self.acessoRestrito()
         elif self._estado == Estado.ESCOLHA_BEBIDA:
             self.escolhaBebida()
+        elif self._estado == Estado.ADICIONAR_BEBIDA_LATA:
+            self.adicionarBebidaLata()
+        elif self._estado == Estado.MONTAR_BEBIDA_DOSADA:
+            self.montarBebidaLata()
         elif self._estado == Estado.FINALIZAR_COMPRA:
             self.finalizarCompra()
 
@@ -46,8 +52,41 @@ class GerenciadorMaquina():
             exit()
 
     def escolhaBebida(self) -> None:
-        pass
+        carrinho_vazio = False
+        if self._maquina.consultarValorCarrinho == 0:
+            carrinho_vazio = True
+        input_:int | ValueError = self._interface.opcoesEscolhaBebida(carrinho_vazio)
+        if input_ == ValueError:
+            self._interface.opcaoInvalida()
+            return
+        if carrinho_vazio:
+            if input_ == 1:
+                self.alterarEstado(Estado.ADICIONAR_BEBIDA_LATA)
+            elif input_ == 2:
+                self.alterarEstado(Estado.MONTAR_BEBIDA_DOSADA)
+            elif input_ == 3:
+                self.alterarEstado(Estado.TELA_INICIAL)
+        else:
+            if input_ == 1:
+                self.alterarEstado(Estado.ADICIONAR_BEBIDA_LATA)
+            elif input_ == 2:
+                self.alterarEstado(Estado.MONTAR_BEBIDA_DOSADA)
+            elif input_ == 3:
+                self.alterarEstado(Estado.FINALIZAR_COMPRA)
+            elif input_ == 4:
+                self._maquina.esvaziarCarrinho()
+                self.alterarEstado(Estado.TELA_INICIAL)
 
+    def adicionarBebidaLata(self) -> None:
+        input_ = self._interface.verificarBebidaLata()
+        bebida_lata = self._maquina.verificarBebidaLata(input_[0])
+        quantidade_estoque = self._maquina.consultarEstoqueItem(input_[0])
+        if input_ == ValueError or not bebida_lata or quantidade_estoque < input_[1]:
+            self._interface.opcaoInvalida()
+            return
+        self._maquina.adicionarBebida(input_[0], input_[1])
+        self.alterarEstado(Estado.ESCOLHA_BEBIDA)
+        
     def validarAcessoRestrito(self) -> None:
         senha = self._interface.verificarSenha()
         if senha == "":
