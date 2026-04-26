@@ -12,8 +12,8 @@ class MaquinaVendas():
     def consultarEstoqueLista(self) -> list[Item]:
         return self._estoque.consultarEstoqueLista()
 
-    def consultarEstoqueItem(self, item:Item) -> int:
-        return self._estoque.consultarEstoqueItem(item)
+    def consultarEstoqueItem(self, nome_item:str) -> int:
+        return self._estoque.consultarEstoqueItem(nome)
     
     def consultarCarrinho(self) -> dict[Bebida, int]:
         self._carrinho.consultarBebidas()
@@ -36,11 +36,11 @@ class MaquinaVendas():
     def checarVazio(self) -> bool:
         self._carrinho.checarVazio()
 
-    def verificarItem(self, nome:str) -> Item | False:
-        return self._estoque.verificarItem(nome)
+    def verificarItem(self, nome_item:str) -> Item | False:
+        return self._estoque.verificarItem(nome_item)
     
-    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
-        self._estoque.estocarItem(item, quantidade_estoque)
+    def estocarItem(self, nome_item:str, quantidade_estoque:int) -> None:
+        self._estoque.estocarItem(nome_item, quantidade_estoque)
 
     def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
         self._carrinho.adicionarBebida(bebida, num_bebidas)

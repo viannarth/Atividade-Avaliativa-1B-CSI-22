@@ -5,23 +5,26 @@ class Estoque():
     def __init__(self) -> None:
         self._estoque:dict[Item, int] = {}
 
-    def consultarEstoqueLista(self) -> dict[Item, int]:
+    def consultarEstoqueLista(self) -> list[Item]:
         itens:list[Item] = [item for item in self._estoque]
         return itens
     
-    def consultarEstoqueItem(self, item:Item) -> int:
+    def consultarEstoqueItem(self, nome_item:str) -> int:
+        item = self._verificarItem(nome_item)
         return self._estoque[item]
     
-    def verificarItem(self, nome:str) -> Item | False:
+    def _verificarItem(self, nome_item:str) -> Item | False:
         for item in self._estoque:
-            if item.consultarNome() == nome:
+            if item.consultarNome() == nome_item:
                 return item
         return False
     
-    def estocarItem(self, item:Item, quantidade_estoque:int) -> None:
-        if self.consultarEstoqueItem(item) == 0: self._estoque[item] = quantidade_estoque
+    def estocarItem(self, nome_item:str, quantidade_estoque:int) -> None:
+        item = self._verificarItem(nome_item)
+        if not item: self._estoque[Item(nome_item)] = quantidade_estoque
         else :self._estoque[item] += quantidade_estoque
 
-    def atualizarEstoqueItem(self, item:Item, quantidade_vendida:int) -> None:
+    def atualizarEstoqueItem(self, nome_item:str, quantidade_vendida:int) -> None:
+        item = self._verificarItem(nome_item)
         self._estoque[item] -= quantidade_vendida
-        if self.consultarEstoqueItem(item) == 0: self._estoque.pop(item)
+        if self.consultarEstoqueItem(nome_item) == 0: self._estoque.pop(item)
