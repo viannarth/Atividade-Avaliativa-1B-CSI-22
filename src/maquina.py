@@ -15,7 +15,7 @@ class MaquinaVendas:
     def consultarEstoqueItem(self, nome_item:str) -> int:
         return self._estoque.consultarEstoqueItem(nome_item)
     
-    def consultarCarrinho(self) -> dict[Bebida, int]:
+    def consultarCarrinho(self) -> list[Bebida]:
         self._carrinho.consultarBebidas()
 
     def consultarFormaPagamento(self) -> FormaPagamento:
@@ -45,11 +45,11 @@ class MaquinaVendas:
     def estocarItem(self, tipo_item:TipoItem, nome_item:str, quantidade_estoque:int) -> None:
         self._estoque.estocarItem(tipo_item, nome_item, quantidade_estoque)
 
-    def adicionarBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
-        self._carrinho.adicionarBebida(bebida, num_bebidas)
+    def adicionarBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
+        self._carrinho.adicionarBebida(nome_bebida, num_bebidas, bebida_dosada)
 
-    def removerBebida(self, bebida:Bebida, num_bebidas:int = 1) -> None:
-        self._carrinho.removerBebida(bebida, num_bebidas)
+    def removerBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
+        self._carrinho.removerBebida(nome_bebida, num_bebidas, bebida_dosada)
 
     def esvaziarCarrinho(self) -> None:
         self._carrinho.esvaziarCarrinho()
@@ -57,18 +57,21 @@ class MaquinaVendas:
     def _atualizarVendas(self, bebida:Bebida | BebidaDosada, quantidade_vendida:int) -> None:
         self._vendas[bebida.consultarTipoBebida()] += bebida.consultarPreco()*quantidade_vendida
         if (bebida.consultarTipoBebida() == TipoBebida.LATA):
-            self._estoque.atualizarEstoqueItem(bebida, quantidade_vendida)
+            self._estoque.atualizarEstoqueItem(bebida.consultarNome(), quantidade_vendida)
         else:
             ingredientes = bebida.consultarIngrediente()
             for ingrediente in ingredientes:
-                self._estoque.atualizarEstoqueItem(ingrediente, quantidade_vendida*ingredientes[ingrediente])
+                self._estoque.atualizarEstoqueItem(ingrediente.consultarNome(), quantidade_vendida*ingredientes[ingrediente])
 
     def realizarVenda(self, forma_pagamento:FormaPagamento) -> None:
         self._carrinho.definirFormaPagamento(forma_pagamento)
         bebidas = self._carrinho.consultarBebidas()
         for bebida in bebidas:
             self._atualizarVendas(bebida, bebidas[bebida])
-            self._carrinho.removerBebida(bebida, bebidas[bebida])
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+                self._carrinho.removerBebida(bebida.consultarNome(), bebidas[bebida])
+            else:
+                self._carrinho.removerBebida(bebida)
         self._carrinho.esvaziarCarrinho()
 
 
