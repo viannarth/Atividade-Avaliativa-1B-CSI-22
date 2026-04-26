@@ -53,7 +53,7 @@ class GerenciadorMaquina():
 
     def escolhaBebida(self) -> None:
         carrinho_vazio = False
-        if self._maquina.consultarValorCarrinho == 0:
+        if self._maquina.consultarValorCarrinho() == 0:
             carrinho_vazio = True
         input_:int | ValueError = self._interface.opcoesEscolhaBebida(carrinho_vazio)
         if input_ == ValueError:

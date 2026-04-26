@@ -40,14 +40,18 @@ class Interface():
 
         print("\nEstoque:")
         for tipo_item in TipoItem:
-            print(f"\t{tipo_item.name.capitalize()}s:")
-            for tupla in dict_estoque[tipo_item]:
-                nome:str = tupla[0]
-                quantidade:int = tupla[1]
-                print(f"\t\t{nome.capitalize()}: {quantidade}")
+            if len(dict_estoque[tipo_item]) != 0:
+                print(f"\t{tipo_item.name.capitalize()}s:")
+                for tupla in dict_estoque[tipo_item]:
+                    nome:str = tupla[0]
+                    quantidade:int = tupla[1]
+                    print(f"\t\t{nome.capitalize()}: {quantidade}")
             
         self._estadoEspera()
 
+    def exibirCarrinho(self) -> None:
+        pass
+    
     def exibirPedido(self) -> None:
         pass
 
@@ -82,7 +86,7 @@ class Interface():
     def opcoesEscolhaBebida(self, carrinho_vazio:bool) -> int | ValueError:
         if carrinho_vazio:
             input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
-            "dosada\n3 - Retornar à tela inicia\n")
+            "dosada\n3 - Retornar à tela inicial\n")
             opcoes_validas:list[int] = [1, 2, 3]
             return self.validarInput(input_, opcoes_validas)
         else:
@@ -106,7 +110,7 @@ class Interface():
             return ValueError
         return (nome_bebida, quantidade)
     
-    def receberItem(self) -> tuple[str, int] | ValueError:
+    def receberItem(self) -> tuple[int, str, int] | ValueError:
         input_ = input("\nDigite o tipo de item a ser estocado:\n1 - Ingrediente\n"
         "2 - Bebida em Lata\n")
         opcoes_validas = [1, 2]

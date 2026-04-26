@@ -22,7 +22,7 @@ class MaquinaVendas:
         return self._carrinho.consultarFormaPagamento()
     
     def consultarValorCarrinho(self) -> int:
-        self._carrinho.consultarValorTotal()
+        return self._carrinho.consultarValorTotal()
 
     def consultarSaldo(self) -> int:
         saldo = 0
