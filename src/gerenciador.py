@@ -1,7 +1,7 @@
 from src.maquina import MaquinaVendas
 from src.interface import Interface
 from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida
-from src.item import Bebida
+from src.item import Bebida, Item
 from enum import Enum
 
 class Estado(Enum):
@@ -64,9 +64,22 @@ class GerenciadorMaquina():
             return
 
         if input_ == 1:
-            print("Saldo checado :)")
+            saldo_total = self._maquina.consultarSaldo()
+            saldo_dosada = self._maquina.consultarSaldoBebida(TipoBebida.DOSADA)
+            saldo_lata = self._maquina.consultarSaldoBebida(TipoBebida.LATA)
+            self._interface.exibirSaldoMaquina(saldo_total, saldo_dosada, saldo_lata)
         elif input_ == 2:
-            print("Item estocado :)")
+            itens = self._maquina.consultarEstoqueLista()
+            nome_itens = [item.consultarNome() for item in itens]
+            quantidades = [self._maquina.consultarEstoqueItem(nome_item) for nome_item in nome_itens]
+            self._interface.exibirEstoque(nome_itens, quantidades)
+            tupla = self._interface.receberItem()
+            if tupla == ValueError:
+                self._interface.opcaoInvalida()
+                return
+            nome_item:str = tupla[0]
+            quantidade:int = tupla[1]
+            self._maquina.estocarItem(nome_item, quantidade)
         elif input_ == 3:
             self.alterarEstado(Estado.TELA_INICIAL)
 
