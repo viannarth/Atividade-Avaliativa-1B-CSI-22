@@ -1,7 +1,7 @@
 from src.item import Item, Ingrediente, BebidaLata
 from src.constantes import TipoItem
 
-class Estoque():
+class Estoque:
     def __init__(self) -> None:
         self._estoque:dict[Item, int] = {}
 

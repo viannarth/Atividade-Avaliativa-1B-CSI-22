@@ -3,7 +3,7 @@ from src.estoque import Estoque
 from src.item import Item, Bebida, BebidaDosada
 from src.carrinho import Carrinho
 
-class MaquinaVendas(): 
+class MaquinaVendas: 
     def __init__(self) -> None:
         self._carrinho:Carrinho = Carrinho()
         self._estoque:Estoque = Estoque()
