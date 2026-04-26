@@ -1,5 +1,10 @@
 from enum import Enum
 
+class TipoItem(Enum):
+    INGREDIENTE = 1
+    LATA = 2
+
+
 class TipoBebida(Enum):
     LATA = 1
     DOSADA = 2
