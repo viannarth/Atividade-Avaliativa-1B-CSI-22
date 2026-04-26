@@ -34,10 +34,9 @@ class BebidaLata(Item, Bebida):
 
 
 class BebidaDosada(Bebida):
-    def __init__(self) -> None:
+    def __init__(self, agua:Ingrediente) -> None:
         preco_dosada:int = PRECO_BEBIDA_DOSADA
         super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-        agua:Ingrediente = Ingrediente("Agua")
         self._bebida_dosada: dict[Ingrediente, Doses] = {agua: Doses.AGUA}
 
     def consultarIngredientes(self) -> dict[Ingrediente,Doses]:

@@ -9,8 +9,8 @@ class MaquinaVendas():
         self._estoque:Estoque = Estoque()
         self._vendas:dict[TipoBebida, int] = {tipo_bebida: 0 for tipo_bebida in TipoBebida}
 
-    def consultarEstoque(self) -> dict[Item, int]:
-        return self._estoque.consultarEstoque()
+    def consultarEstoqueLista(self) -> list[Item]:
+        return self._estoque.consultarEstoqueLista()
 
     def consultarEstoqueItem(self) -> int:
         return self._estoque.consultarEstoqueItem()
