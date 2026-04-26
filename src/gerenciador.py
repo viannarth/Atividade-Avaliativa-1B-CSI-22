@@ -1,4 +1,5 @@
 from src.maquina import MaquinaVendas
+from src.item import BebidaDosada
 from src.interface import Interface
 from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida, TipoItem
 from enum import Enum
@@ -76,7 +77,6 @@ class GerenciadorMaquina():
         elif input_ == 2:
             self.exibirEstoque()
         elif input_ == 3:
-            self.exibirEstoque()
             tupla = self._interface.receberItem()
             if tupla == ValueError:
                 self._interface.opcaoInvalida()
@@ -86,6 +86,7 @@ class GerenciadorMaquina():
             nome_item:str = tupla[1]
             quantidade:int = tupla[2]
             self._maquina.estocarItem(tipo_item, nome_item, quantidade)
+            self._interface.itemAdicinado()
         elif input_ == 4:
             self.alterarEstado(Estado.TELA_INICIAL)
 
@@ -100,8 +101,10 @@ class GerenciadorMaquina():
             return
         
         forma_pagamento = FormaPagamento(input_)
+
         valor_total = MaquinaVendas.consultarValorTotal()
         self._interface.exibirValorTotal(valor_total)
+        
         carrinho = self._maquina.consultarCarrinho().copy()
 
         MaquinaVendas.realizarVenda(forma_pagamento)

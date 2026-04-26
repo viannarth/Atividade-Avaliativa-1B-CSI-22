@@ -9,6 +9,7 @@ class Item(ABC):
     def consultarNome(self) -> str:
         return self._nome
 
+
 class Ingrediente(Item):
     def __init__(self, nome:str) -> None:
         super().__init__(nome)
