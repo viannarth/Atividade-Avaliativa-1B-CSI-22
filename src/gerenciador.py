@@ -1,7 +1,6 @@
 from src.maquina import MaquinaVendas
 from src.interface import Interface
-from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida
-from src.item import Bebida, Item
+from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida, TipoItem
 from enum import Enum
 
 class Estado(Enum):
@@ -57,6 +56,12 @@ class GerenciadorMaquina():
         else:
             self._interface.senhaInvalida()
 
+    def exibirEstoque(self) -> None:
+        itens = self._maquina.consultarEstoqueLista()
+        nome_itens = [item.consultarNome() for item in itens]
+        quantidades = [self._maquina.consultarEstoqueItem(nome_item) for nome_item in nome_itens]
+        self._interface.exibirEstoque(nome_itens, quantidades)
+
     def acessoRestrito(self) -> None:
         input_:int | ValueError = self._interface.opcoesAcessoRestrito()
         if input_ == ValueError:
@@ -69,18 +74,19 @@ class GerenciadorMaquina():
             saldo_lata = self._maquina.consultarSaldoBebida(TipoBebida.LATA)
             self._interface.exibirSaldoMaquina(saldo_total, saldo_dosada, saldo_lata)
         elif input_ == 2:
-            itens = self._maquina.consultarEstoqueLista()
-            nome_itens = [item.consultarNome() for item in itens]
-            quantidades = [self._maquina.consultarEstoqueItem(nome_item) for nome_item in nome_itens]
-            self._interface.exibirEstoque(nome_itens, quantidades)
+            self.exibirEstoque()
+        elif input_ == 3:
+            self.exibirEstoque()
             tupla = self._interface.receberItem()
             if tupla == ValueError:
                 self._interface.opcaoInvalida()
                 return
-            nome_item:str = tupla[0]
-            quantidade:int = tupla[1]
-            self._maquina.estocarItem(nome_item, quantidade)
-        elif input_ == 3:
+            tipo_item:int = tupla[0]
+            tipo_item:TipoItem = TipoItem(tipo_item)
+            nome_item:str = tupla[1]
+            quantidade:int = tupla[2]
+            self._maquina.estocarItem(tipo_item, nome_item, quantidade)
+        elif input_ == 4:
             self.alterarEstado(Estado.TELA_INICIAL)
 
     def finalizarCompra(self) -> None:

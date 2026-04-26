@@ -1,7 +1,7 @@
 from src.item import Bebida
 from src.constantes import FormaPagamento
 
-class Carrinho():
+class Carrinho:
     def __init__(self) -> None:
         self._carrinho:dict[Bebida, int] = {}
         self._valor_total:int = 0

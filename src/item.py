@@ -28,15 +28,15 @@ class Bebida(ABC):
 
 class BebidaLata(Item, Bebida):
     def __init__(self, nome:str) -> None:
-        super(Item, self).__init__(nome)
         preco_lata:int = PRECO_BEBIDA_LATA
-        super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
+        Item.__init__(self, nome)
+        Bebida.__init__(self, preco_lata, TipoBebida.LATA)
 
 
 class BebidaDosada(Bebida):
     def __init__(self, agua:Ingrediente) -> None:
         preco_dosada:int = PRECO_BEBIDA_DOSADA
-        super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
+        super().__init__(preco_dosada, TipoBebida.DOSADA)
         self._bebida_dosada: dict[Ingrediente, Doses] = {agua: Doses.AGUA}
 
     def consultarIngredientes(self) -> dict[Ingrediente,Doses]:

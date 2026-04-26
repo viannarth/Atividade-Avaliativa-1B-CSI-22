@@ -1,7 +1,7 @@
-from src.item import Item
+from src.item import Item, Ingrediente, BebidaLata
+from src.constantes import TipoItem
 
-
-class Estoque():
+class Estoque:
     def __init__(self) -> None:
         self._estoque:dict[Item, int] = {}
 
@@ -19,10 +19,14 @@ class Estoque():
                 return item
         return False
     
-    def estocarItem(self, nome_item:str, quantidade_estoque:int) -> None:
+    def estocarItem(self, tipo_item:TipoItem, nome_item:str, quantidade_estoque:int) -> None:
         item = self._verificarItem(nome_item)
-        if not item: self._estoque[Item(nome_item)] = quantidade_estoque
-        else :self._estoque[item] += quantidade_estoque
+        if not item:
+            if tipo_item == TipoItem.INGREDIENTE:
+                self._estoque[Ingrediente(nome_item)] = quantidade_estoque
+            elif tipo_item == TipoItem.LATA:
+                self._estoque[BebidaLata(nome_item)] = quantidade_estoque
+        else: self._estoque[item] += quantidade_estoque
 
     def atualizarEstoqueItem(self, nome_item:str, quantidade_vendida:int) -> None:
         item = self._verificarItem(nome_item)

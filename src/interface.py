@@ -12,14 +12,16 @@ class Interface():
 
     def exibirSaldoMaquina(self, saldo_total:int, saldo_lata:int, 
     saldo_dosada:int) -> None:
-        print(f"Saldo total de bebidas: {saldo_total}\n")
-        print(f"Saldo de bebida dosadas: {saldo_dosada}\n")
-        print(f"Saldo de bebidas em lata: {saldo_lata}\n")
+        print("Saldo da máquina de vendas:")
+        print(f"\tSaldo total de bebidas: {saldo_total}")
+        print(f"\tSaldo de bebida dosadas: {saldo_dosada}")
+        print(f"\tSaldo de bebidas em lata: {saldo_lata}\n")
 
     def exibirEstoque(self, nome_itens:list[str], quantidades:list[int]) -> None:
-        print("Estoque:\n")
+        print("Estoque:")
         for nome, quantidade in zip(nome_itens, quantidades):
-            print(f"{nome}: {quantidade}\n")
+            print(f"\t{nome}: {quantidade}")
+        print("")
 
     def exibirPedido(self) -> None:
         pass
@@ -47,13 +49,21 @@ class Interface():
         return senha
     
     def opcoesAcessoRestrito(self) -> int | ValueError:
-        input_ = input("Digite uma opção:\n1 - Checar saldo\n2 - Estocar item\n" \
-        "3 - Retornar à tela inicial\n")
-        opcoes_validas:list[int] = [1, 2, 3]
+        input_ = input("Digite uma opção:\n1 - Checar saldo\n2 - Consultar " 
+        "estoque\n3 - Estocar item\n4 - Retornar à tela inicial\n")
+        opcoes_validas:list[int] = [1, 2, 3, 4]
         return self.validarInput(input_, opcoes_validas)
     
     def receberItem(self) -> tuple[str, int] | ValueError:
+        input_ = input("Digite o tipo de item a ser estocado:\n1 - Ingrediente\n"
+        "2 - Bebida em Lata\n")
+        opcoes_validas = [1, 2]
+        tipo_item = self.validarInput(input_, opcoes_validas)
+        if tipo_item == ValueError:
+            return ValueError
         input_ = input("Digite o nome do item a ser estocado.\n")
+        if input_ == "":
+            return ValueError
         nome_item = input_.strip()
         input_ = input("Digite a quantidade do item a ser estocado.\n")
         try:
@@ -62,7 +72,7 @@ class Interface():
             return ValueError
         if quantidade < 0: 
             return ValueError
-        return (nome_item, quantidade)
+        return (tipo_item, nome_item, quantidade)
     
     def opcoesFinalizarCompra(self) -> int | ValueError:
         input_ = input("Escolha uma forma de pagamento:\n1 - Pix\n2 - Débito\n"
