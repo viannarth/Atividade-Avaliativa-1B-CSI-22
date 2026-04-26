@@ -1,18 +1,15 @@
-from src.constantes import TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
+from src.constantes import TipoItem, TipoBebida, Doses, PRECO_BEBIDA_DOSADA, PRECO_BEBIDA_LATA
 from abc import ABC
 
-
 class Item(ABC):
-    """!
-    @brief Define um item especifico
-    """
-    def __init__(self, nome:str) -> None:
+    def __init__(self, nome:str, tipo_item:TipoItem) -> None:
         """!
         @brief Inicializa um item especifico
         @param nome Nome do item
-        @param _nome Nome do item
+        @param tipo_item Tipo do item
         """
         self._nome:str = nome
+        self._tipo_item:TipoItem = tipo_item
 
     def consultarNome(self) -> str:
         """!
@@ -20,6 +17,10 @@ class Item(ABC):
         @return Nome do item
         """
         return self._nome
+    
+    def consultarTipoItem(self) -> TipoItem:
+        return self._tipo_item
+
 
 class Ingrediente(Item):
     """!
@@ -27,9 +28,9 @@ class Ingrediente(Item):
     """
     def __init__(self, nome:str) -> None:
         """"!
-        @brief Inicializa um item especifico e chama o construtuor da classe Item
+        @brief Inicializa um item especifico ao chamar o construtuor da classe Item com o tipo sendo INGREDIENTE
         """
-        super().__init__(nome)
+        super().__init__(nome, TipoItem.INGREDIENTE)
 
 
 class Bebida(ABC):
@@ -62,34 +63,34 @@ class Bebida(ABC):
 
 class BebidaLata(Item, Bebida):
     """!
-    @brief Classe que herda de bebida
+    @brief Classe que herda de bebida e item
     """
     def __init__(self, nome:str) -> None:
         """!
-        @brief Inicializa chamando o inicilizador pai e definindo o preco da bebida
+        @brief Inicializa chamando os inicilizadores pai e definindo o preco da bebida
         @param nome Nome do bebida
         """
-        super(Item, self).__init__(nome)
         preco_lata:int = PRECO_BEBIDA_LATA
-        super(Bebida, self).__init__(preco_lata, TipoBebida.LATA)
+        Item.__init__(self, nome, TipoItem.LATA)
+        Bebida.__init__(self, preco_lata, TipoBebida.LATA)
 
 
 class BebidaDosada(Bebida):
     """!
-    @brief Classe que herda de bebida
+    @brief Classe que herda de Bebida
     """
-    def __init__(self) -> None:
+    def __init__(self, agua:Ingrediente) -> None:
         """!
-        @brief Inicializa chamando o inicilizador pai e definindo o preco da bebida
-        @param _bebida_dosada Um dicionario que associa cada ingrediente que compoe a bebida com sua dose
+        @brief Inicializa chamando o inicilizador pai definindo o preco da bebida e criando um dicionario relacionando
+        seus ingredientes com suas doses
         """
         preco_dosada:int = PRECO_BEBIDA_DOSADA
-        super(Bebida, self).__init__(preco_dosada, TipoBebida.DOSADA)
-        self._bebida_dosada: dict[Ingrediente, Doses] = {}
+        super().__init__(preco_dosada, TipoBebida.DOSADA)
+        self._bebida_dosada: dict[Ingrediente, Doses] = {agua: Doses.AGUA}
 
-    def consultarIngrediente(self) -> dict[Ingrediente,Doses]:
+    def consultarIngredientes(self) -> dict[Ingrediente,Doses]:
         """!
-        @brief Consulta o preco da bebida
+        @brief Consulta os ingredientes da bebida dosada
         @return Dicionario que contem os ingredientes com sua reespectivas doses
         """
         return self._bebida_dosada

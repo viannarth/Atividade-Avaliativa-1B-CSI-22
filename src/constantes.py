@@ -1,5 +1,10 @@
 from enum import Enum
 
+class TipoItem(Enum):
+    INGREDIENTE = 1
+    LATA = 2
+
+
 class TipoBebida(Enum):
     """!
     @brief Atribui a LATA e DOSADA valores para que se consiga usa-las como tipos
@@ -20,6 +25,7 @@ class Doses(Enum):
     CINQUENTA: 5
     SETENTA: 7
     CEM: 10
+    AGUA: 50
 
 
 class FormaPagamento(Enum):
