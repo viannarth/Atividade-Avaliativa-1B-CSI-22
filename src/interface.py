@@ -1,3 +1,4 @@
+from src.constantes import TipoItem
 from time import sleep
 
 class Interface():
@@ -27,10 +28,24 @@ class Interface():
         print(f"\tSaldo de bebidas em lata: {saldo_lata}")
         self._estadoEspera()
 
-    def exibirEstoque(self, nome_itens:list[str], quantidades:list[int]) -> None:
+    def exibirEstoque(self, tipo_itens:list[TipoItem], nome_itens:list[str], quantidades:list[int]) -> None:
+        dict_estoque:dict[TipoItem, list[tuple[str, int]]] = {tipo_item: [] for tipo_item in TipoItem}
+        for idx, nome in enumerate(nome_itens):
+            dict_estoque[tipo_itens[idx]].append((nome, quantidades[idx]))
+
+        if len(dict_estoque[TipoItem.INGREDIENTE]) == 0:
+            print("O estoque está vazio.")
+            self._estadoEspera()
+            return
+
         print("\nEstoque:")
-        for nome, quantidade in zip(nome_itens, quantidades):
-            print(f"\t{nome}: {quantidade}")
+        for tipo_item in TipoItem:
+            print(f"\t{tipo_item.name.capitalize()}s:")
+            for tupla in dict_estoque[tipo_item]:
+                nome:str = tupla[0]
+                quantidade:int = tupla[1]
+                print(f"\t\t{nome.capitalize()}: {quantidade}")
+            
         self._estadoEspera()
 
     def exibirPedido(self) -> None:
@@ -64,7 +79,7 @@ class Interface():
         opcoes_validas:list[int] = [1, 2, 3, 4]
         return self.validarInput(input_, opcoes_validas)
     
-    def receberItem(self) -> tuple[str, int] | ValueError:
+    def receberItem(self) -> tuple[int, str, int] | ValueError:
         input_ = input("\nDigite o tipo de item a ser estocado:\n1 - Ingrediente\n"
         "2 - Bebida em Lata\n")
         opcoes_validas = [1, 2]
@@ -72,9 +87,9 @@ class Interface():
         if tipo_item == ValueError:
             return ValueError
         input_ = input("\nDigite o nome do item a ser estocado.\n")
-        if input_ == "":
-            return ValueError
         nome_item = input_.strip()
+        if nome_item == "":
+            return ValueError
         input_ = input("\nDigite a quantidade do item a ser estocado.\n")
         try:
             quantidade = int(input_)

@@ -15,7 +15,7 @@ class GerenciadorMaquina():
     def __init__(self, maquina:MaquinaVendas) -> None:
         self._maquina:MaquinaVendas = maquina
         self._estado:Estado = Estado.TELA_INICIAL
-        self._interface:Interface = Interface()        
+        self._interface:Interface = Interface()
 
     def alterarEstado(self, novo_estado:Estado) -> None:
         self._estado = novo_estado
@@ -59,9 +59,10 @@ class GerenciadorMaquina():
 
     def exibirEstoque(self) -> None:
         itens = self._maquina.consultarEstoqueLista()
+        tipo_itens = [item.consultarTipoItem() for item in itens]
         nome_itens = [item.consultarNome() for item in itens]
         quantidades = [self._maquina.consultarEstoqueItem(nome_item) for nome_item in nome_itens]
-        self._interface.exibirEstoque(nome_itens, quantidades)
+        self._interface.exibirEstoque(tipo_itens, nome_itens, quantidades)
 
     def acessoRestrito(self) -> None:
         input_:int | ValueError = self._interface.opcoesAcessoRestrito()
