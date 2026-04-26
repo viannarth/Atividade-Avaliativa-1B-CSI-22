@@ -12,8 +12,8 @@ class MaquinaVendas():
     def consultarEstoqueLista(self) -> list[Item]:
         return self._estoque.consultarEstoqueLista()
 
-    def consultarEstoqueItem(self) -> int:
-        return self._estoque.consultarEstoqueItem()
+    def consultarEstoqueItem(self, item:Item) -> int:
+        return self._estoque.consultarEstoqueItem(item)
     
     def consultarCarrinho(self) -> dict[Bebida, int]:
         self._carrinho.consultarBebidas()
