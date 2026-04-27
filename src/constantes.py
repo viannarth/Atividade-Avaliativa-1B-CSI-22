@@ -16,16 +16,11 @@ class TipoBebida(Enum):
 
 
 class Doses(Enum):
-    """!
-    @brief Define os valores de cada dose
-    @details O valor de TRINTA (que se refere a trinta por cento) vale 0.3 * 10 g , entao vale 3 g.
-    CINQUENTA (que se refere a cinquenta por cento) vale 0.3 * 10  = 5  e assim em diante
-    """
-    TRINTA: 3
-    CINQUENTA: 5
-    SETENTA: 7
-    CEM: 10
-    AGUA: 50
+    TRINTA = 3
+    CINQUENTA = 5
+    SETENTA = 7
+    CEM = 10
+    AGUA = 50
 
 
 class FormaPagamento(Enum):
@@ -36,5 +31,6 @@ class FormaPagamento(Enum):
     DEBITO = 2
     CREDITO = 3
 
-PRECO_BEBIDA_LATA:int = 5
-PRECO_BEBIDA_DOSADA:int = 10
+PRECO_BEBIDA_LATA:float = 5.0
+PRECO_BEBIDA_DOSADA:float = 10.0
+SENHA_ACESSO_RESTRITO:str = "1000000390"

@@ -21,29 +21,18 @@ class Estoque():
         itens:list[Item] = [item for item in self._estoque]
         return itens
     
-    def consultarEstoqueItem(self, nome_item:str) -> int:
-        """!
-        @brief Consulta a quantidade de item especifico
-        @param nome_item Nome do Item a ser consultado
-        @return Retorna o quantidade de um item especifico
-        """
-        item = self.verificarItem(nome_item)
+    def consultarEstoqueItem(self, nome_item:str, tipo_item:TipoItem) -> int:
+        item = self.verificarItem(nome_item, tipo_item)
         return self._estoque[item]
     
-    def verificarItem(self, nome_item:str) -> Item | False:
+    def verificarItem(self, nome_item:str, tipo_item:TipoItem) -> Item | False:
         for item in self._estoque:
-            if item.consultarNome() == nome_item:
+            if item.consultarNome() == nome_item and item.consultarTipoItem() == tipo_item:
                 return item
         return False
     
     def estocarItem(self, tipo_item:TipoItem, nome_item:str, quantidade_estoque:int) -> None:
-        """!
-        @brief Coloca uma certa quantidade de um item especifico no estoque
-        @details se o item nao tiver no estoque voce o adicona com uma certa quantidade. Se ele ja estiver no estoque
-        voce apenas adiciona uma certa quantidade desse  item. Sao utilizados diferentes metodos a depender se
-        o item seria um ingrediente ou uma bebida em lata
-        """
-        item = self.verificarItem(nome_item)
+        item = self.verificarItem(nome_item, tipo_item)
         if not item:
             if tipo_item == TipoItem.INGREDIENTE:
                 self._estoque[Ingrediente(nome_item)] = quantidade_estoque
@@ -51,12 +40,7 @@ class Estoque():
                 self._estoque[BebidaLata(nome_item)] = quantidade_estoque
         else: self._estoque[item] += quantidade_estoque
 
-    def atualizarEstoqueItem(self, nome_item:str, quantidade_vendida:int) -> None:
-        """!
-        @brief Serve para reduzir a quantidade de um item no estoque ao realizar uma compra
-        @param nome_item Item a ser vendido
-        @param quantidade_vendida Quantidade do item a ser vendida
-        """
-        item = self.verificarItem(nome_item)
+    def atualizarEstoqueItem(self, tipo_item:TipoItem, nome_item:str, quantidade_vendida:int) -> None:
+        item = self.verificarItem(nome_item, tipo_item)
         self._estoque[item] -= quantidade_vendida
-        if self.consultarEstoqueItem(nome_item) == 0: self._estoque.pop(item)
+        if self.consultarEstoqueItem(nome_item, tipo_item) == 0: self._estoque.pop(item)

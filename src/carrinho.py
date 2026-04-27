@@ -1,6 +1,5 @@
 from src.item import Bebida, BebidaDosada, BebidaLata
-from src.constantes import FormaPagamento
-
+from src.constantes import FormaPagamento, TipoBebida
 
 class Carrinho:
     """!
@@ -26,7 +25,12 @@ class Carrinho:
         """
         bebidas:list[Bebida] = [bebida for bebida in self._carrinho]
         return bebidas
-
+    
+    def consultarItem(self, nome_bebida:str) -> int:
+        for bebida in self.consultarBebidas():
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+                if bebida.consultarNome() == nome_bebida:
+                    return self._carrinho[bebida]
     
     def consultarValorTotal(self) -> int:
         """!
@@ -48,14 +52,9 @@ class Carrinho:
         return False
     
     def verificarBebidaLata(self, nome_bebida:str) -> BebidaLata | False:
-        """!
-        @brief verifica se tem uma determinada bebida em lata no carrinho
-        @param nome_bebida A bebida a ser verificada
-        @return retorna verdadeiro se encontrou
-        """
-        for bebida in self._carrinho:
-            if bebida.consultarTipoBebida == BebidaLata:
-                if nome_bebida == bebida.consultarNome():
+        for bebida in self.consultarBebidas():
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+                if bebida.consultarNome() == nome_bebida:
                     return bebida
         return False
     
@@ -78,10 +77,12 @@ class Carrinho:
         else:
             bebida = self.verificarBebidaLata(nome_bebida)
             if not bebida:
-                self._carrinho[bebida] = num_bebidas
+                nova_bebida = BebidaLata(nome_bebida)
+                self._carrinho[nova_bebida] = num_bebidas
+                self._valor_total += nova_bebida.consultarPreco()*num_bebidas
             else:
                 self._carrinho[bebida] += num_bebidas
-            self._valor_total += bebida.consultarPreco()*num_bebidas
+                self._valor_total += bebida.consultarPreco()*num_bebidas
 
 
     def removerBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
