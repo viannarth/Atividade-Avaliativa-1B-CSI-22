@@ -1,7 +1,7 @@
 from src.maquina import MaquinaVendas
-from src.item import BebidaDosada
+from src.item import Ingrediente
 from src.interface import Interface
-from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida, TipoItem
+from src.constantes import SENHA_ACESSO_RESTRITO, FormaPagamento, TipoBebida, TipoItem, Doses
 from enum import Enum
 
 class Estado(Enum):
@@ -34,7 +34,7 @@ class GerenciadorMaquina():
         elif self._estado == Estado.ADICIONAR_BEBIDA_LATA:
             self.adicionarBebidaLata()
         elif self._estado == Estado.MONTAR_BEBIDA_DOSADA:
-            self.montarBebidaLata()
+            self.montarBebidaDosada()
         elif self._estado == Estado.FINALIZAR_COMPRA:
             self.finalizarCompra()
 
@@ -56,9 +56,10 @@ class GerenciadorMaquina():
         bebidas = self._maquina.consultarCarrinho()
         nomes_bebidas: list[str] = []
         quantidades:list[int] = []
-        num_dosadas:int = 0
+        num_dosadas:int = 1
         for bebida in bebidas:
-            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+            tipo_bebida = bebida.consultarTipoBebida()
+            if tipo_bebida == TipoBebida.LATA:
                 nomes_bebidas.append(bebida.consultarNome())
                 quantidades.append(self._maquina.consultarItemCarrinho(bebida.consultarNome()))
             else:
@@ -118,8 +119,35 @@ class GerenciadorMaquina():
         self.alterarEstado(Estado.ESCOLHA_BEBIDA)
 
     def montarBebidaDosada(self) -> None:
-        pass
-        
+        self.exibirEstoque()
+        estoque_agua:int = self._maquina.consultarEstoqueItem("Agua", TipoItem.INGREDIENTE)
+        if estoque_agua < Doses.AGUA.value:
+            self._interface.aguaInsuficiente()
+            self.alterarEstado(Estado.ESCOLHA_BEBIDA)
+            return
+        nome_ingrediente = self._interface.escolherIngrediente()
+        ingrediente = self._maquina.verificarIngrediente(nome_ingrediente)
+        if not ingrediente:
+            self._interface.opcaoInvalida()
+            return
+        dose = self._interface.escolherDose()
+        if dose == ValueError:
+            self._interface.opcaoInvalida()
+            return
+        if dose == Doses.CEM:
+            dict_dosada:dict[Ingrediente, Doses] = {ingrediente: dose}
+        else:
+            dict_dosada:dict[Ingrediente, Doses] = {ingrediente: dose}
+            nome_segundo_ingrediente = self._interface.escolherSegundoIngrediente()
+            segundo_ingrediente = self._maquina.verificarIngrediente(nome_segundo_ingrediente)
+            if not segundo_ingrediente:
+                self._interface.opcaoInvalida()
+                return
+            dict_dosada[segundo_ingrediente] = Doses(10 - dose.value)
+        bebida_dosada = self._maquina.criarBebidaDosada(dict_dosada)
+        self._maquina.adicionarBebida(bebida_dosada=bebida_dosada)
+        self.alterarEstado(Estado.ESCOLHA_BEBIDA)
+
     def validarAcessoRestrito(self) -> None:
         senha = self._interface.verificarSenha()
         if senha == "":
@@ -183,8 +211,9 @@ class GerenciadorMaquina():
                 self._interface.dispensarBebidaLata(self._maquina.consultarItemCarrinho(bebida.consultarNome()), bebida.consultarNome())
 
             if bebida.consultarTipoBebida() == TipoBebida.DOSADA:
-                lista_doses:list[int] = [bebida[ingrediente].value for ingrediente in bebida.consultarIngredientes()]
-                lista_ingredientes:list[str] = [ingrediente.consultarNome() for ingrediente in bebida.consultarIngredientes()]
+                dict_dosada = bebida.consultarIngredientes()
+                lista_doses:list[int] = [dict_dosada[ingrediente].value for ingrediente in dict_dosada]
+                lista_ingredientes:list[str] = [ingrediente.consultarNome() for ingrediente in dict_dosada]
                 self._interface.dispensarIngrediente(lista_doses, lista_ingredientes)
 
         self._maquina.realizarVenda(forma_pagamento.value)

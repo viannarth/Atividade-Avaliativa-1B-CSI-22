@@ -1,4 +1,4 @@
-from src.constantes import TipoItem
+from src.constantes import TipoItem, TipoBebida, Doses
 from time import sleep
 
 class Interface():
@@ -44,7 +44,11 @@ class Interface():
                 for tupla in dict_estoque[tipo_item]:
                     nome:str = tupla[0]
                     quantidade:int = tupla[1]
-                    print(f"\t\t{nome.capitalize()}: {quantidade}")
+                    print(f"\t\t{nome.capitalize()}: {quantidade}", end=" ")
+                    if tipo_item == TipoItem.INGREDIENTE:
+                        print("gramas")
+                    elif tipo_item == TipoItem.LATA:
+                        print("unidades")
 
     def exibirCarrinho(self, valor_total: int, nomes_bebidas:list[str], quantidades:list[int]) -> None:
         print("\nCarrinho:")
@@ -52,7 +56,7 @@ class Interface():
             print(f"\t{nome.capitalize()}: {quantidade}")
         print(f"Total a pagar: R${valor_total:.2f}")
 
-    def validarInput(self, input_:str, opcoes_validas:list[int]) -> int | ValueError:
+    def _validarInput(self, input_:str, opcoes_validas:list[int]) -> int | ValueError:
         input_ = input_.strip()
         try:
             input_ = int(input_)
@@ -66,7 +70,7 @@ class Interface():
         input_ = input("\nDigite uma opção:\n1 - Adicionar bebida ao carrinho\n" \
         "2 - Acesso restrito\n3 - Sair\n")
         opcoes_validas:list[int] = [1, 2, 3]
-        return self.validarInput(input_, opcoes_validas)
+        return self._validarInput(input_, opcoes_validas)
     
     def verificarSenha(self) -> str:
         senha = input("\nDigite a senha para obter acesso restrito. Pressione " \
@@ -78,40 +82,13 @@ class Interface():
         input_ = input("\nDigite uma opção:\n1 - Checar saldo\n2 - Consultar " 
         "estoque\n3 - Estocar item\n4 - Retornar à tela inicial\n")
         opcoes_validas:list[int] = [1, 2, 3, 4]
-        return self.validarInput(input_, opcoes_validas)
-    
-    def opcoesEscolhaBebida(self, carrinho_vazio:bool) -> int | ValueError:
-        if carrinho_vazio:
-            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
-            "dosada\n3 - Retornar à tela inicial\n")
-            opcoes_validas:list[int] = [1, 2, 3]
-            return self.validarInput(input_, opcoes_validas)
-        else:
-            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
-            "dosada\n3 - Finalizar compra\n4 - Cancelar compra\n")
-            opcoes_validas:list[int] = [1, 2, 3, 4]
-            return self.validarInput(input_, opcoes_validas)
-        
-    def verificarNomeBebidaLata(self) -> str:
-        input_ = input("\nDigite o nome da bebida lata. Pressione Enter para " 
-        "sair.\n")
-        return input_.strip().capitalize()
-    
-    def verificarQuantidadeBebidaLata(self) -> int | ValueError:
-        input_ = input("\nDigite a quantidade de bebida desejada.\n")
-        try:
-            quantidade = int(input_)
-        except:
-            return ValueError
-        if quantidade < 0: 
-            return ValueError
-        return quantidade
+        return self._validarInput(input_, opcoes_validas)
     
     def receberItem(self) -> tuple[int, str, int] | ValueError:
         input_ = input("\nDigite o tipo de item a ser estocado:\n1 - Ingrediente\n"
         "2 - Bebida em Lata\n")
         opcoes_validas = [1, 2]
-        tipo_item = self.validarInput(input_, opcoes_validas)
+        tipo_item = self._validarInput(input_, opcoes_validas)
         if tipo_item == ValueError:
             return ValueError
         input_ = input("\nDigite o nome do item a ser estocado.\n")
@@ -127,11 +104,59 @@ class Interface():
             return ValueError
         return (tipo_item, nome_item, quantidade)
     
+    def opcoesEscolhaBebida(self, carrinho_vazio:bool) -> int | ValueError:
+        if carrinho_vazio:
+            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
+            "dosada\n3 - Retornar à tela inicial\n")
+            opcoes_validas:list[int] = [1, 2, 3]
+            return self._validarInput(input_, opcoes_validas)
+        else:
+            input_ = input("\nDigite uma opção:\n1 - Escolher bebida lata\n2 - Montar bebida " 
+            "dosada\n3 - Finalizar compra\n4 - Cancelar compra\n")
+            opcoes_validas:list[int] = [1, 2, 3, 4]
+            return self._validarInput(input_, opcoes_validas)
+        
+    def escolherIngrediente(self) -> str:
+        input_ = input("\nEscolha um ingrediente:\n")
+        return input_.strip()
+    
+    def escolherSegundoIngrediente(self) -> str:
+        input_ = input("\nEscolha o segundo ingrediente:\n")
+        return input_.strip()
+    
+    def aguaInsuficiente(self) -> None:
+        print("\nEstoque de água insuficiente. Chame alguém autorizado para abastecer.\n")
+        self.estadoEspera()
+        
+    def escolherDose(self) -> Doses | ValueError:
+        input_ = input("Escolha uma dose:\n1 - 30%\n2 - 50%\n3 - 70%\n4 - 100%\n")
+        opcoes_validas:list[int] = [1, 2, 3, 4]
+        dose = self._validarInput(input_, opcoes_validas)
+        if dose == ValueError:
+            return ValueError
+        dose_map = {1: 3, 2: 5, 3: 7, 4: 10}
+        return Doses(dose_map[dose])
+
+    def verificarNomeBebidaLata(self) -> str:
+        input_ = input("\nDigite o nome da bebida lata. Pressione Enter para " 
+        "sair.\n")
+        return input_.strip().capitalize()
+    
+    def verificarQuantidadeBebidaLata(self) -> int | ValueError:
+        input_ = input("\nDigite a quantidade de bebida desejada.\n")
+        try:
+            quantidade = int(input_)
+        except:
+            return ValueError
+        if quantidade < 0: 
+            return ValueError
+        return quantidade
+    
     def opcoesFinalizarCompra(self) -> int | ValueError:
         input_ = input("\nEscolha uma forma de pagamento:\n1 - Pix\n2 - Débito\n"
                        + "3 - Crédito\n4 - Retornar à tela inicial\n")
         opcoes_validas:list[int] = [1, 2, 3, 4]
-        return self.validarInput(input_, opcoes_validas)
+        return self._validarInput(input_, opcoes_validas)
 
     def finalizarCompra(self, forma_pagamento:int) -> None:
         if forma_pagamento == 1:

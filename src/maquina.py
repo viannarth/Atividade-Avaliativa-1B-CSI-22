@@ -1,5 +1,5 @@
-from src.constantes import TipoBebida, FormaPagamento, TipoItem, PRECO_BEBIDA_LATA, PRECO_BEBIDA_DOSADA
-from src.estoque import Estoque
+from src.constantes import TipoBebida, FormaPagamento, TipoItem, Doses, PRECO_BEBIDA_LATA, PRECO_BEBIDA_DOSADA
+from src.estoque import Estoque, Ingrediente
 from src.item import Item, Bebida, BebidaDosada, BebidaLata
 from src.carrinho import Carrinho
 
@@ -48,6 +48,13 @@ class MaquinaVendas:
     def estocarItem(self, tipo_item:TipoItem, nome_item:str, quantidade_estoque:int) -> None:
         self._estoque.estocarItem(tipo_item, nome_item, quantidade_estoque)
 
+    def criarBebidaDosada(self, dict_dosada:dict[Ingrediente, Doses]) -> BebidaDosada:
+        agua:Ingrediente = self._estoque.verificarItem("Agua", TipoItem.INGREDIENTE)
+        bebida_dosada:BebidaDosada = BebidaDosada(agua)
+        for ingrediente, dose in dict_dosada.items():
+            bebida_dosada.adicionarIngrediente(ingrediente, dose)
+        return bebida_dosada
+
     def adicionarBebida(self, nome_bebida:str = None, num_bebidas:int = 1, bebida_dosada:BebidaDosada = None) -> None:
         self._carrinho.adicionarBebida(nome_bebida, num_bebidas, bebida_dosada)
 
@@ -59,9 +66,9 @@ class MaquinaVendas:
     
     def _atualizarVendas(self, quantidade_vendida:int, bebida_dosada: BebidaDosada = None, nome_bebida:str = None) -> None:
         if nome_bebida == None:
-            ingredientes = bebida_dosada.consultarIngrediente()
+            ingredientes = bebida_dosada.consultarIngredientes()
             for ingrediente in ingredientes:
-                self._estoque.atualizarEstoqueItem(TipoItem.INGREDIENTE, ingrediente.consultarNome(), quantidade_vendida*ingredientes[ingrediente])
+                self._estoque.atualizarEstoqueItem(TipoItem.INGREDIENTE, ingrediente.consultarNome(), quantidade_vendida*ingredientes[ingrediente].value)
             self._vendas[TipoBebida.DOSADA] += PRECO_BEBIDA_DOSADA*quantidade_vendida
         else: 
             self._estoque.atualizarEstoqueItem(TipoItem.LATA, nome_bebida, quantidade_vendida)

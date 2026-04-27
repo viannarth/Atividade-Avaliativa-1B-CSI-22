@@ -11,11 +11,11 @@ class TipoBebida(Enum):
 
 
 class Doses(Enum):
-    TRINTA: 3
-    CINQUENTA: 5
-    SETENTA: 7
-    CEM: 10
-    AGUA: 50
+    TRINTA = 3
+    CINQUENTA = 5
+    SETENTA = 7
+    CEM = 10
+    AGUA = 50
 
 
 class FormaPagamento(Enum):
@@ -25,4 +25,4 @@ class FormaPagamento(Enum):
 
 PRECO_BEBIDA_LATA:float = 5.0
 PRECO_BEBIDA_DOSADA:float = 10.0
-SENHA_ACESSO_RESTRITO:str = "1"
+SENHA_ACESSO_RESTRITO:str = "1000000390"
