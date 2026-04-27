@@ -1,4 +1,4 @@
-from src.constantes import TipoItem, TipoBebida, Doses
+from src.constantes import TipoItem, Doses
 from time import sleep
 
 class Interface():
