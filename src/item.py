@@ -13,7 +13,6 @@ class Item(ABC):
         return self._tipo_item
 
 
-
 class Ingrediente(Item):
     def __init__(self, nome:str) -> None:
         super().__init__(nome, TipoItem.INGREDIENTE)

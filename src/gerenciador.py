@@ -51,12 +51,29 @@ class GerenciadorMaquina():
         elif input_ == 3:
             exit()
 
+    def exibirCarrinho(self) -> None:
+        valor_total = self._maquina.consultarValorCarrinho()
+        bebidas = self._maquina.consultarCarrinho()
+        nomes_bebidas: list[str] = []
+        quantidades:list[int] = []
+        num_dosadas:int = 0
+        for bebida in bebidas:
+            if bebida.consultarTipoBebida() == TipoBebida.LATA:
+                nomes_bebidas.append(bebida.consultarNome())
+                quantidades.append(self._maquina.consultarItemCarrinho(bebida.consultarNome()))
+            else:
+                nomes_bebidas.append(f"Bebida Dosada {num_dosadas}")
+                quantidades.append(1)
+                num_dosadas += 1
+        self._interface.exibirCarrinho(valor_total, nomes_bebidas, quantidades)
+
     def escolhaBebida(self) -> None:
         self.exibirEstoque()
 
-        carrinho_vazio = False
-        if self._maquina.consultarValorCarrinho() == 0:
-            carrinho_vazio = True
+        carrinho_vazio = self._maquina.checarVazio()
+        if not carrinho_vazio:
+            self.exibirCarrinho()
+        
         input_:int | ValueError = self._interface.opcoesEscolhaBebida(carrinho_vazio)
         
         if input_ == ValueError:
@@ -148,6 +165,7 @@ class GerenciadorMaquina():
             self.alterarEstado(Estado.TELA_INICIAL)
 
     def finalizarCompra(self) -> None:
+        self.exibirCarrinho()
         input_:int | ValueError = self._interface.opcoesFinalizarCompra()
         if input_ == ValueError:
             self._interface.opcaoInvalida()
@@ -158,20 +176,16 @@ class GerenciadorMaquina():
             return
         
         forma_pagamento = FormaPagamento(input_)
+        self._interface.finalizarCompra(forma_pagamento.value)
 
-        valor_total = self._maquina.consultarValorCarrinho()
-        self._interface.exibirValorTotal(valor_total)
-        
-        carrinho = self._maquina.consultarCarrinho().copy()
-
-        self._maquina.realizarVenda(forma_pagamento)
-        self._interface.finalizarCompra(forma_pagamento)
-
-        for bebida in carrinho:
+        for bebida in self._maquina.consultarCarrinho():
             if bebida.consultarTipoBebida() == TipoBebida.LATA:
-                self._interface.dispensarBebidaLata(carrinho[bebida], bebida.consultarNome())
+                self._interface.dispensarBebidaLata(self._maquina.consultarItemCarrinho(bebida.consultarNome()), bebida.consultarNome())
 
-            else:
+            if bebida.consultarTipoBebida() == TipoBebida.DOSADA:
                 lista_doses:list[int] = [bebida[ingrediente].value for ingrediente in bebida.consultarIngredientes()]
                 lista_ingredientes:list[str] = [ingrediente.consultarNome() for ingrediente in bebida.consultarIngredientes()]
                 self._interface.dispensarIngrediente(lista_doses, lista_ingredientes)
+
+        self._maquina.realizarVenda(forma_pagamento.value)
+        self.alterarEstado(Estado.TELA_INICIAL)

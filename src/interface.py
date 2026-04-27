@@ -3,7 +3,7 @@ from time import sleep
 
 class Interface():
     def __init__(self) -> None:
-        print("Bem-vindo à loja do General!")
+        print("Bem-vindo à maquina de vendas do General!")
 
     def estadoEspera(self) -> None:
         input("")
@@ -46,11 +46,11 @@ class Interface():
                     quantidade:int = tupla[1]
                     print(f"\t\t{nome.capitalize()}: {quantidade}")
 
-    def exibirCarrinho(self) -> None:
-        pass
-    
-    def exibirPedido(self) -> None:
-        pass
+    def exibirCarrinho(self, valor_total: int, nomes_bebidas:list[str], quantidades:list[int]) -> None:
+        print("\nCarrinho:")
+        for nome, quantidade in zip(nomes_bebidas, quantidades):
+            print(f"\t{nome.capitalize()}: {quantidade}")
+        print(f"Total a pagar: R${valor_total:.2f}")
 
     def validarInput(self, input_:str, opcoes_validas:list[int]) -> int | ValueError:
         input_ = input_.strip()
@@ -95,7 +95,7 @@ class Interface():
     def verificarNomeBebidaLata(self) -> str:
         input_ = input("\nDigite o nome da bebida lata. Pressione Enter para " 
         "sair.\n")
-        return input_.strip()
+        return input_.strip().capitalize()
     
     def verificarQuantidadeBebidaLata(self) -> int | ValueError:
         input_ = input("\nDigite a quantidade de bebida desejada.\n")
@@ -115,7 +115,7 @@ class Interface():
         if tipo_item == ValueError:
             return ValueError
         input_ = input("\nDigite o nome do item a ser estocado.\n")
-        nome_item = input_.strip()
+        nome_item = input_.strip().capitalize()
         if nome_item == "":
             return ValueError
         input_ = input("\nDigite a quantidade do item a ser estocado.\n")
@@ -132,19 +132,16 @@ class Interface():
                        + "3 - Crédito\n4 - Retornar à tela inicial\n")
         opcoes_validas:list[int] = [1, 2, 3, 4]
         return self.validarInput(input_, opcoes_validas)
-    
-    def exibirValorTotal(self, valor_total) -> None:
-        print(f"\nTotal a pagar: R${valor_total}")
 
-    def finalizarCompra(self, forma_pagamento) -> None:
+    def finalizarCompra(self, forma_pagamento:int) -> None:
         if forma_pagamento == 1:
-            input("\nRealize a transferência e pressione Enter para confirmar o pagamento.")
+            input("\nRealize a transferência e pressione Enter para confirmar o pagamento.\n")
 
         if forma_pagamento == 2:
-            input("\nInsira o cartão de débito e pressione Enter para confirmar o pagamento.")
+            input("\nInsira o cartão de débito e pressione Enter para confirmar o pagamento.\n")
 
         if forma_pagamento == 3:
-            input("\nInsira o cartão de crédito e pressione Enter para confirmar o pagamento.")
+            input("\nInsira o cartão de crédito e pressione Enter para confirmar o pagamento.\n")
 
         print("Validando pagamento", end="")
         sleep(1)
@@ -167,6 +164,8 @@ class Interface():
         sleep(1)
         print(".")
         sleep(1)
+        print("\nBebida dispensada. Aproveite!")
+        self.estadoEspera()
 
     def dispensarIngrediente(self, doses:list[int], ingredientes:list[str]):
         for index in range(len(ingredientes)):
@@ -179,4 +178,5 @@ class Interface():
             print(".")
             sleep(1)
 
-        print("\nBebida dosada dispensada.")
+        print("\nBebida dosada dispensada. Aproveite!")
+        self.estadoEspera()
